@@ -1,9 +1,10 @@
 ## Interface: 11200
 ## Title: |cff33ffccpf|cffffffffQuest |cffcccccc[Octo DB]
-## Author: Shagu
+## Author: Shagu, paokkerkir, The Kludge Bureau - merged by Roby_Brok
+## X-Website: https://github.com/roby-brok/pfQuest-octo
 ## Contributors: paokkerkir, The Kludge Bureau, Gurky, Antealis, HumbleKagu, KasVital, Haaxor1689, IcemanHHW, fatpowaranga
 ## Notes: An Octo DB extension for pfQuest - TurtleWoW data plus the Octo corrections
-## Version: GIT
+## Version: 1.0.0
 ## Dependencies: pfQuest
 ## SavedVariables: pfQuest_turtlecount
 
