@@ -14,6 +14,26 @@ local function patchtable(base, diff)
   end
 end
 
+-- Locale entries are per-field, so they must merge rather than replace. An
+-- entry that carries only ["T"] means the title changed, not that the
+-- objective and description should be dropped -- deletion has its own "_"
+-- sentinel. Assigning the whole entry silently discarded 14 descriptions
+-- whose pack entry was just an incomplete copy of the base one (quest 478,
+-- for instance, repeats T and O byte for byte and omits D).
+local function patchlocale(base, diff)
+  for k, v in pairs(diff) do
+    if type(v) == "string" and v == "_" then
+      base[k] = nil
+    elseif type(v) == "table" and type(base[k]) == "table" then
+      for field, text in pairs(v) do
+        base[k][field] = text
+      end
+    else
+      base[k] = v
+    end
+  end
+end
+
 -- Detect a typo from old clients and re-apply the typo to the zones table
 -- This is a workaround which is required until all clients are updated
 for id, name in pairs({GetMapZones(2)}) do
@@ -31,7 +51,7 @@ for _, db in pairs(dbs) do
   for loc, _ in pairs(pfDB.locales) do
     if pfDB[db][loc] and pfDB[db][loc.."-turtle"] then
       loc_update = pfDB[db][loc.."-turtle"] or pfDB[db]["enUS-turtle"]
-      patchtable(pfDB[db][loc], loc_update)
+      patchlocale(pfDB[db][loc], loc_update)
     end
   end
 end
