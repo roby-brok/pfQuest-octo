@@ -449,7 +449,13 @@ do -- Octo-only records, carried over from the pfQuest-octo database
     }
 
   -- minimap: 1 absent from the turtle build, 0 only a placeholder there
-  pfDB["minimap"]["data-turtle"][2041] = { 1513.0, 1003.0 }
+  -- minimap and meta are top-level pfDB keys, not nested under a
+  -- "data-turtle" field like the other databases -- see
+  -- db/minimap-turtle.lua and the separate handling at the bottom of
+  -- patchtable.lua. Using the nested path here made this line throw,
+  -- which aborted the rest of the file and silently dropped 166 of the
+  -- corrections below it.
+  pfDB["minimap-turtle"][2041] = { 1513.0, 1003.0 }
 
   -- quests-itemreq: 1 absent from the turtle build, 0 only a placeholder there
   pfDB["quests-itemreq"]["data-turtle"][15209] = {
