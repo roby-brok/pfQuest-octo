@@ -78,6 +78,17 @@ end
 -- Use turtle-wow database url
 pfQuest.dburl = "https://octowow.st/db/?quest="
 
+-- Report the pack version on load. pfQuest prints its own through /pfquest
+-- but knows nothing about this pack, so a bug report against the Octo data
+-- had no version to quote. Warn loudly if overwrites.lua did not finish.
+local octover = GetAddOnMetadata("pfQuest-octo", "Version") or "unknown"
+if pfDB["octo-overwrites-complete"] then
+  DEFAULT_CHAT_FRAME:AddMessage("|cff33ffccpf|cffffffffQuest |cffcccccc[Octo DB]|r: v" .. octover)
+else
+  DEFAULT_CHAT_FRAME:AddMessage("|cff33ffccpf|cffffffffQuest |cffcccccc[Octo DB]|r: v" .. octover
+    .. " |cffff5555- overwrites.lua did not finish, some database corrections are missing.|r")
+end
+
 -- Disable Minimap in custom dungeon maps
 function pfMap:HasMinimap(map_id)
   -- disable dungeon minimap

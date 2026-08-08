@@ -978,3 +978,9 @@ do -- quests
   -- This can be removed by the next database export
   pfDB["items"]["data-turtle"][41783]["U"] = { [62217] = 1.0 }
 end
+
+-- Set last. A top-level error anywhere above stops this file, so if this
+-- flag is missing the overwrites did not all apply -- that failure mode
+-- cost 166 silently dropped corrections before 1.0.2. patchtable.lua
+-- reports it.
+pfDB["octo-overwrites-complete"] = true
