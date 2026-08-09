@@ -3,11 +3,51 @@ local loc = GetLocale()
 local dbs = { "items", "quests", "quests-itemreq", "objects", "units", "zones", "professions", "areatrigger", "refloot" }
 local noloc = { "items", "quests", "objects", "units" }
 
+-- Databases whose entries are maps of named fields (["obj"], ["pre"], ["rnk"] ...).
+-- Only these may be merged per-field; see patchentry below. Everything else
+-- (zones, minimap, refloot, quests-itemreq, professions) stores positional
+-- arrays or plain values, where a per-field merge would splice two records
+-- together index by index instead of replacing one with the other.
+local fieldmerge = { ["quests"] = true, ["units"] = true, ["items"] = true, ["objects"] = true }
+
 -- Patch databases to merge TurtleWoW data
 local function patchtable(base, diff)
   for k, v in pairs(diff) do
     if type(v) == "string" and v == "_" then
       base[k] = nil
+    else
+      base[k] = v
+    end
+  end
+end
+
+-- Same as patchtable, but merges per-field for entries that exist in both.
+--
+-- The pack is not a diff -- it is a full redump, and 1206 of its quest entries
+-- are truncated copies of the base record: every shared field is byte-identical
+-- and the rest are simply absent. Replacing the whole entry therefore deleted
+-- data nothing had ever intended to change: 785 quests lost ["obj"] (so no
+-- objective pins at all -- quest 4503 "Shizzle's Flyer" was reported this way),
+-- 366 lost ["pre"], 121 lost ["end"] and with it the turn-in pin.
+--
+-- Field-level merge keeps the pack authoritative wherever it actually says
+-- something -- of the 24 entries that do change a value, not one of them
+-- changes a field it also omits -- and falls back to the base record for the
+-- fields it stays silent about. Deletion keeps an explicit sentinel at both
+-- levels, so the pack can still remove an entry ([id] = "_") or a single field
+-- (["pre"] = "_") when that is genuinely the intent.
+local function patchentry(base, diff)
+  for k, v in pairs(diff) do
+    if type(v) == "string" and v == "_" then
+      base[k] = nil
+    elseif type(v) == "table" and type(base[k]) == "table" then
+      for field, value in pairs(v) do
+        if value == "_" then
+          base[k][field] = nil
+        else
+          base[k][field] = value
+        end
+      end
     else
       base[k] = v
     end
@@ -45,7 +85,11 @@ end
 local loc_core, loc_update
 for _, db in pairs(dbs) do
   if pfDB[db]["data-turtle"] then
-    patchtable(pfDB[db]["data"], pfDB[db]["data-turtle"])
+    if fieldmerge[db] then
+      patchentry(pfDB[db]["data"], pfDB[db]["data-turtle"])
+    else
+      patchtable(pfDB[db]["data"], pfDB[db]["data-turtle"])
+    end
   end
 
   for loc, _ in pairs(pfDB.locales) do

@@ -35,8 +35,10 @@ The TurtleWoW database as the base, with the Octo pack folded in on top:
 | units | 9,928 | **11,095** |
 | objects | 15,163 | **15,857** |
 | items | 9,301 | **12,672** |
-| locales | 5 | **6** (deDE regained) |
 | corrections | 137 | **162** |
+
+**English only.** The other five locale databases were dropped — 21.7 MB of Lua that every
+login parsed and pfQuest then discarded, because only the active locale is ever read.
 
 `overwrites.lua` carries three things in order — the 23 records the Octo DB has that the
 TurtleWoW build lacks, then the Octo pack's 137 corrections, then the TurtleWoW pack's own 2.
@@ -45,6 +47,8 @@ Records come first so anything indexing into them finds them present. The genera
 database refresh will not silently drop any of it.
 
 Quest links point at [octowow.st/db](https://octowow.st/db).
+
+The pack's own code changes and fixes are listed in **[CHANGES-octo.md](CHANGES-octo.md)**.
 
 ## Install
 
