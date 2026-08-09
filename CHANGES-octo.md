@@ -59,10 +59,12 @@ tables, where the damage was two orders of magnitude larger.
 
 ## Local changes
 
-- **English only.** The `deDE`, `esES`, `ptBR`, `ruRU` and `zhCN` databases are no longer
-  shipped or loaded — 21.7 MB of Lua that every login parsed in full. Nothing read them:
-  pfQuest keeps only the active locale and frees the rest immediately after load. See
-  pfQuest's own changelog for the other half of this change.
+- **All six locales are shipped.** An earlier revision dropped everything but enUS to
+  save 21.7 MB of login parsing; it was reverted because pfQuest's `[Translate]` button
+  reads the pack's locale tables too, and without them a Turtle- or Octo-added quest
+  falls back to English while a vanilla one translates. See pfQuest's changelog for the
+  `[Translate]` fix and the **Quest Text Translations** option that frees this data for
+  anyone who would rather have the memory.
 - **Pack version is printed on load**, and a loud warning is shown if `overwrites.lua` did
   not finish, so a bug report against the Octo data has a version to quote.
 - **Quest tooltips** gain a "Part X of Y" chain position and an "Introduced in: *patch*"
