@@ -1,5 +1,9 @@
 # Changes in this pack
 
+**This build: 1.0.4** — the per-field merge fix below. Safe to version this pack freely;
+unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
+raid that an update exists.
+
 Everything in `pfQuest-octo` that is not just the two upstream datasets copied together.
 The data itself is unmodified — see [Credits](README.md#credits). This file covers the
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
