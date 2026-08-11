@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.0.5** — strips the fake mount drop sources (below). Previous: 1.0.4, the per-field merge fix. Safe to version this pack freely;
+**This build: 1.0.6** — objective data restored for the two Moonwhisper Coast quests (below). Previous: 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,18 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.0.6 — two Moonwhisper Coast quests drew no pins
+
+Flagged by a player **using `/db checkdb`** — the tool doing exactly what it was built for.
+*Phasmophobia* (41990) and *Fallen One Cargo* (41920) shipped with no `["obj"]` block, so
+their collect/find targets never appeared on the map. Both targets exist in the data with
+spawns exactly where the quests happen and are now wired up, hand-verified: the four
+*Maras'ethil Relic* objects (2020322–2020325, all zone 5642 only) and *Maghan's Cargo*
+(2020265, zone 5642 only). Applied only where `["obj"]` is absent. Of the other two quests
+the player's checkdb flagged: *Emberstrife* (6570) is a base-database gap now corrected in
+pfQuest's own `corrections.lua`, and *The Key to Karazhan IV* (40823) is a talk-to quest
+that legitimately draws no pins.
 
 ### 1.0.5 — 21 custom mounts claimed to drop from hundreds of ordinary mobs
 

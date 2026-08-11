@@ -498,6 +498,33 @@ do -- custom mounts: strip mass-attributed drop sources (2026-08-11)
   end
 end
 
+do -- quests: restore missing objective data (2026-08-11, /db checkdb report)
+  -- Reported by a player in Moonwhisper Coast using /db checkdb: four quests
+  -- flagged with no objective data. Two are collect/find quests in the pack
+  -- whose targets exist in the data with spawns exactly where the quest
+  -- happens -- verified by hand per the corrections.lua doctrine (name matches
+  -- the objective text, spawns in the quest's zone):
+  --   41990 Phasmophobia -- "Collect Maras'ethil Relics in the ruins" ->
+  --         objects 2020322-2020325 "Maras'ethil Relic", all zone 5642 only,
+  --         quest ender Olgra (62899) in 5642
+  --   41920 Fallen One Cargo -- "Find Maghan's lost cargo" ->
+  --         object 2020265 "Maghan's Cargo", zone 5642 only
+  -- Applied only where ["obj"] is absent, so real data ships ahead of this.
+  -- (The other two flagged quests: 6570 is a base-database gap corrected in
+  -- pfQuest's own corrections.lua; 40823 is a talk-to quest and legitimately
+  -- draws no pins.)
+  local objfix = {
+    [41990] = { ["O"] = { 2020322, 2020323, 2020324, 2020325 } },
+    [41920] = { ["O"] = { 2020265 } },
+  }
+  for qid, obj in pairs(objfix) do
+    local entry = pfDB["quests"]["data-turtle"][qid]
+    if entry and not entry["obj"] then
+      entry["obj"] = obj
+    end
+  end
+end
+
 do -- area trigger
   -- Investigating Hateforge (Quest)
   pfDB["areatrigger"]["data-turtle"][40486] = { ["coords"] = { [1] = { 96.1, 57.6, 46 } } }
