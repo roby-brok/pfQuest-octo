@@ -466,6 +466,38 @@ end
 
 -- ==== corrections carried over from pfQuest-octo ====
 
+do -- custom mounts: strip mass-attributed drop sources (2026-08-11)
+  -- Reported in Discord: a level-6 Venture Co. Lumber Worker (61675) on the
+  -- goblin starter island showed "Onyxian Drake 2.50%" in its loot tooltip,
+  -- and a second report of "mounts on non possible creatures".
+  --
+  -- Cause is in the extracted data, not the display: 21 custom mount items
+  -- carry ["U"] tables attributing them to 240-977 ordinary units each, at
+  -- uniform 0.5/1/2.5/5 percent chances -- unit 6 (Kobold Vermin) included,
+  -- and 61675 is on four of the lists. The custom mounts with REAL drop
+  -- sources (30000-30007: chargers, crocolisks, two crabs) have 1-7 specific
+  -- units, so the artifact class is unmistakable: everything at >=50 sources
+  -- is a flattened template, not a drop table. Deliberately NOT touched:
+  -- world-drop materials (varied per-unit chances), pickpocket pouches, and
+  -- the jewelcrafting plans seeded into shared recipe pools -- those look
+  -- like server design, not extraction error.
+  --
+  -- Only ["U"] is removed; vendor/object/container sources stay. Runs before
+  -- patchtable.lua merges data-turtle, so the merged database never carries
+  -- the fake sources. pfExtend rebuilds its cached loot DB via the pack
+  -- version, so tooltips heal on the first login after updating.
+  local massmounts = {
+    30008, 30009, 30010, 30011, 30012, 30013, 30014, 30015, 30016, 30017,
+    30018, 30019, 30020, 30021, 30022, 30023, 30024, 30025, 30026, 30040,
+    81091,
+  }
+  for _, id in pairs(massmounts) do
+    if pfDB["items"]["data-turtle"][id] then
+      pfDB["items"]["data-turtle"][id]["U"] = nil
+    end
+  end
+end
+
 do -- area trigger
   -- Investigating Hateforge (Quest)
   pfDB["areatrigger"]["data-turtle"][40486] = { ["coords"] = { [1] = { 96.1, 57.6, 46 } } }

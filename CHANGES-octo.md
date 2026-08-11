@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.0.4** — the per-field merge fix below. Safe to version this pack freely;
+**This build: 1.0.5** — strips the fake mount drop sources (below). Previous: 1.0.4, the per-field merge fix. Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,20 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.0.5 — 21 custom mounts claimed to drop from hundreds of ordinary mobs
+
+Reported in Discord with a screenshot: a level-6 Venture Co. Lumber Worker on the goblin
+starter island showing *Onyxian Drake 2.50%* in its pfExtend loot tooltip, plus "mounts on
+non possible creatures". The extracted data attributes 21 custom mount items (riding
+crabs, thunder lizards, scorpids, both drakes, Admiral Grumbleshell, Big Blizzard Bear) to
+**240–977 units each** at uniform template chances — unit 6, *Kobold Vermin*, included.
+The custom mounts with real drop sources (30000–30007) list 1–7 specific units, so the
+artifact class is unmistakable. `overwrites.lua` now strips the `["U"]` table of those 21
+items before the merge; vendor and object sources stay, and world-drop materials,
+pickpocket pouches and the jewelcrafting plans seeded into shared recipe pools are
+deliberately untouched. Pairs with pfExtend keying its cached loot DB to this pack's
+version, so existing installs rebuild on their first login after updating.
 
 ### The pack was deleting quest data it never meant to touch
 
