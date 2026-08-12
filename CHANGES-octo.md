@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.0.8** — the full-database audit: objective data restored for 56 more quests, every remaining gap classified (below). Previous: 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.0.9** — first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,23 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.0.9 — first batch from the server's own database
+
+The whole quest database on octowow.st/db (the server's data, rendered) was crawled and
+parsed — all 6,889 known ids. This batch ships what needs no further waiting:
+
+- **12 kill/interact objectives** the pack lacked, ids spawn-verified — including
+  *Destroy the Deathtotem*, which the 1.0.8 name-match audit had correctly held back as
+  unverifiable and the server data now settles.
+- **12 class/race requirements** the pack never carried. The visible symptom, reported
+  by a player: a Tauren druid saw the Tauren-priest *Light of An'she* chain pinned —
+  the entries had a race mask but no class mask, so there was nothing to filter on.
+  Priest, shaman and mage chains are covered.
+
+Still queued from the same crawl: ~920 collect quests get their pins once the item
+pages (drop sources) finish crawling, and 665 quests where the pack and the server
+disagree on objectives get a compared review rather than a blind overwrite.
 
 ### 1.0.8 — the full audit: every no-objective quest in the database, classified
 

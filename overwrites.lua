@@ -684,6 +684,69 @@ do -- quests: restore missing objective data in bulk (2026-08-12, 1.0.8 audit)
   end
 end
 
+do -- quests: site-authoritative corrections, batch 1 (2026-08-12, 1.0.9)
+  -- Source: the server's own database as rendered by octowow.st/db, crawled
+  -- and parsed in full (all 6,889 known quest ids; tooling and caches in
+  -- Documents\OctoWoW Works\octowow-db). Two absent-only sets:
+  --
+  -- objfix -- kill/interact objectives the pack lacked, every id verified to
+  -- exist with spawns in the merged data. 41982 (Destroy the Deathtotem) was
+  -- demoted from the 1.0.8 name-match batch as unverifiable; the site data
+  -- settles it as npc 62781.
+  --
+  -- maskfix -- race/class requirements the pack never carried. The Tauren
+  -- priest chain had only its race mask, which is why a Tauren druid saw
+  -- "Light of An'she" pinned (player report by Dusk): race passed and there
+  -- was no class field to filter on. Values are the site's literal masks
+  -- (class 16 priest, 64 shaman, 128 mage).
+  --
+  -- Still pending from the same crawl: 923 collect quests whose pins need
+  -- item drop-sources (item pages still crawling), and 665 pack-vs-site
+  -- objective differences held for a compared review, not blind overwrite.
+  local objfix = {
+    [41906] = { ["O"] = { 3000203 } }, -- No Mercy For The Wicked
+    [41916] = { ["U"] = { 62992 } }, -- The Elder's End
+    [41939] = { ["U"] = { 62783 } }, -- Vortalus' Edict
+    [41943] = { ["U"] = { 13282, 12236 } }, -- Foul Waters
+    [41967] = { ["U"] = { 4124, 4248 } }, -- The Need to Survive
+    [41978] = { ["U"] = { 62760 } }, -- The Wrath of Malgan
+    [41982] = { ["U"] = { 62781 } }, -- Destroy the Deathtotem
+    [41996] = { ["U"] = { 63001 } }, -- Siren's Song
+    [42000] = { ["U"] = { 62890, 62891, 62889 } }, -- Highborne Burden
+    [42038] = { ["U"] = { 63170, 63167, 63166 } }, -- The Frostmane War
+    [42039] = { ["U"] = { 63131 } }, -- Chieftain Ubukaz
+    [42042] = { ["U"] = { 63173, 63172, 63145, 63144 } }, -- Led Astray
+  }
+  for qid, obj in pairs(objfix) do
+    local entry = pfDB["quests"]["data-turtle"][qid]
+    if entry and not entry["obj"] then
+      entry["obj"] = obj
+    end
+  end
+
+  local maskfix = {
+    [40053] = { class = 128 },              -- Hidden Secrets
+    [40056] = { race = 589 },               -- Zinfizzlex's Portable Shredder Unit
+    [41873] = { race = 589 },               -- Brangar's Journal
+    [41938] = { class = 64 },               -- Windtorn Crest Stone
+    [41939] = { class = 64 },               -- Vortalus' Edict
+    [42055] = { class = 16 },               -- In Favor of the Three Siblings
+    [42056] = { class = 16 },               -- Garments of the Three Siblings
+    [42057] = { class = 16 },               -- Light of An'she
+    [42058] = { class = 16 },               -- Light of An'she
+    [42059] = { class = 16 },               -- Spiritwalk
+    [42060] = { class = 16 },               -- Spiritwalk
+    [42079] = { class = 16 },               -- Secrets of Moonwhisper
+  }
+  for qid, fix in pairs(maskfix) do
+    local entry = pfDB["quests"]["data-turtle"][qid]
+    if entry then
+      if fix.race and not entry["race"] then entry["race"] = fix.race end
+      if fix.class and not entry["class"] then entry["class"] = fix.class end
+    end
+  end
+end
+
 do -- area trigger
   -- Investigating Hateforge (Quest)
   pfDB["areatrigger"]["data-turtle"][40486] = { ["coords"] = { [1] = { 96.1, 57.6, 46 } } }
