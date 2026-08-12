@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.0.6** — objective data restored for the two Moonwhisper Coast quests (below). Previous: 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.0.7** — objective data restored for nine more Moonwhisper Coast quests (below). Previous: 1.0.6 (first two Moonwhisper quests), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,28 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.0.7 — nine more Moonwhisper Coast quests drew no pins
+
+Two more `/db checkdb` reports from Discord covering twenty log quests between them. Nine
+had their targets in the unit data all along, hand-verified by the same doctrine as 1.0.6
+(unit name matches what the objective text names, spawns in zone 5642 where the quest says):
+*Hiding in the Shade* (41993 → the three Shadewalker units), *Shade Mother* (41994 →
+Matriarch Ohanzee), *Wanted: Growlpaw* (41948 → Growlpaw), *Collectors of Draenethyst*
+(42011 → Starshard Collector), *The Windhorn Burden* (42013 → Druid of the Moth + Disciple
+of Lo'sho), *The Mighty Elekk* (42019 → Moonwhisper Elekk), *Ritual Ready* (42046 →
+Azureshimmer Stagwing), *Blackroot Hold* (42064 → the nine Blackroot furbolgs the
+objective line names as holders), *The Withered Den* (42069 → the withered expedition
+cluster marking the den).
+
+The rest cannot be fixed from this database: the collectable objects for *Powerless
+Runestone*, *Ghosts of Maras'ethil* and *Heaven Falling Down* were never extracted, no
+hydra unit carries spawns for *Taste for Hydra*, *Glowing Draenethyst Cluster* (41909) has
+no data at all beyond its id, and Moro'gai Village (zone 5649) has **zero** extracted
+spawns — which also strands the turn-in pins of its delivery quests (*An Ill Omen*, *The
+Long Hunt*). *The Key to Karazhan IV*, *In Need of Water* and *Agent of Hydraxis* are
+talk-to or reputation quests and are correct with no objective data. Full per-quest notes
+sit in `overwrites.lua`.
 
 ### 1.0.6 — two Moonwhisper Coast quests drew no pins
 

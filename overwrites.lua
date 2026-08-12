@@ -525,6 +525,84 @@ do -- quests: restore missing objective data (2026-08-11, /db checkdb report)
   end
 end
 
+do -- quests: restore missing objective data (2026-08-12, /db checkdb reports)
+  -- Two more player reports covering 20 log quests around Moonwhisper Coast.
+  -- Same doctrine as the block above: a correction is added only when the
+  -- unit's name matches what the objective text names, and its spawns sit in
+  -- zone 5642 where the quest says they should. Everything here was checked
+  -- by hand against units-turtle.lua coordinates.
+  --
+  -- Kill quests, targets named in the objective line:
+  --   41993 Hiding in the Shade   -- "Kill the Shadewalkers of An'she's
+  --         Respite" -> Shadewalker Brute/Bonerattler/Sharpshooter
+  --         (62996/62999/63000), one cluster at 41-47,18-23. Suntail (62997)
+  --         and Matriarch Ohanzee (62998) stand among them but are not "the
+  --         Shadewalkers", so they are left out.
+  --   41994 Shade Mother          -- "Kill Matriarch Ohanzee" -> 62998,
+  --         single spawn 42.9,19.2 inside the Shadewalker camp.
+  --   41948 Wanted: Growlpaw      -- Growlpaw -> 63081, single spawn
+  --         53.6,95.2 in the bearfolk village "in the far south". The stolen
+  --         wares and the turn-in NPC (Chief Defender Hamaam) are not in the
+  --         database -- Moro'gai Village (zone 5649) has zero extracted
+  --         spawns -- so the kill pin is all that can be restored.
+  --   42011 Collectors of Draenethyst -- "Retrieve one Starshard from the
+  --         Starshard Collectors" -> 62826.
+  --   42013 The Windhorn Burden   -- "Slay the Druids of the Moth and
+  --         Disciples of Lo'sho" -> 63061/63062, Grove of the Moon cluster.
+  --   42019 The Mighty Elekk      -- "Bring an Elekk Tusk" -> Moonwhisper
+  --         Elekk (63008), five roaming spawns ("rare, almost nomadic").
+  --   42046 Ritual Ready          -- "Bring 7 Stagwing Feathers" ->
+  --         Azureshimmer Stagwing (63036), 24 spawns in the fields.
+  --
+  -- Collect quests whose objective line names the holders (the collectable
+  -- itself is not in the database, so the named source is pinned instead):
+  --   42064 Blackroot Hold        -- "Recover the stolen expedition supplies
+  --         from the Blackroot furbolgs" -> the nine Blackroot units, both
+  --         camps of their village to the south (y 77-95).
+  --   42069 The Withered Den      -- "Find what caused the expedition to
+  --         wither in the Barrow Den north of Sunsworn Camp" -> Withered
+  --         Ranger/Explorer/Researcher (63152/63153/63154), a tight cluster
+  --         at 53-55,68-69 just north of the camp (56,71) -- the withered
+  --         expedition itself, marking the den.
+  --
+  -- Reported but NOT fixable from this database (nothing to reference):
+  --   41997 Taste for Hydra       -- no hydra unit carries spawns anywhere.
+  --   42010 Powerless Runestone   -- the Frozen Highborne Vials (Owl Wing
+  --         Thicket ground objects) are not in the object data; the turn-in
+  --         spire (Keeper N'las, 63183) already pins.
+  --   42066 Ghosts of Maras'ethil -- no artifact objects exist; the ruins
+  --         hold 41990's "Maras'ethil Relic" spawns, but borrowing another
+  --         quest's objects would be a guess, not a verification.
+  --   42067 Heaven Falling Down   -- no Meteor Shard object; Servitor's
+  --         Sanctuary is a named subzone (5670) but spawns only record the
+  --         parent zone, so no Fallen One cluster can be verified as it.
+  --   41909 Glowing Draenethyst Cluster -- no text, no start, no end: the
+  --         entry is an id and levels, nothing more.
+  --   41912 An Ill Omen / 41944 The Long Hunt -- pure deliveries, and their
+  --         Moro'gai Village turn-in NPCs are part of the zone-5649 gap.
+  --   40823 / 42049 / 6823        -- talk-to or reputation quests; no
+  --         objective data is correct for them.
+  --   6570 Emberstrife            -- vanilla-database gap, already corrected
+  --         in pfQuest's own corrections.lua (2026-08-11).
+  local objfix = {
+    [41993] = { ["U"] = { 62996, 62999, 63000 } },
+    [41994] = { ["U"] = { 62998 } },
+    [41948] = { ["U"] = { 63081 } },
+    [42011] = { ["U"] = { 62826 } },
+    [42013] = { ["U"] = { 63061, 63062 } },
+    [42019] = { ["U"] = { 63008 } },
+    [42046] = { ["U"] = { 63036 } },
+    [42064] = { ["U"] = { 62786, 62787, 62788, 62789, 62790, 62791, 62792, 62793, 63092 } },
+    [42069] = { ["U"] = { 63152, 63153, 63154 } },
+  }
+  for qid, obj in pairs(objfix) do
+    local entry = pfDB["quests"]["data-turtle"][qid]
+    if entry and not entry["obj"] then
+      entry["obj"] = obj
+    end
+  end
+end
+
 do -- area trigger
   -- Investigating Hateforge (Quest)
   pfDB["areatrigger"]["data-turtle"][40486] = { ["coords"] = { [1] = { 96.1, 57.6, 46 } } }
