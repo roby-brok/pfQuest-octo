@@ -603,6 +603,87 @@ do -- quests: restore missing objective data (2026-08-12, /db checkdb reports)
   end
 end
 
+do -- quests: restore missing objective data in bulk (2026-08-12, 1.0.8 audit)
+  -- Result of the full-database audit: of 6,889 merged quests, 2,580 carry no
+  -- ["obj"]. 1,265 are talk/delivery texts and 9 reputation grinds (no
+  -- objectives is CORRECT for them), 39 are deprecated, and 659 name nothing
+  -- that exists in the database (the genuinely-absent class). The remainder
+  -- went through a name-match pipeline holding the same doctrine as the
+  -- blocks above -- a unit/item name from the database appearing in the
+  -- quest's own objective text, spawns/sources verified, quest enders and
+  -- location mentions excluded -- and every surviving row was reviewed by
+  -- hand. 56 ship here; 268 more had matches but not proof (object-only
+  -- matches, cross-zone name reuse, ambiguous intent) and are documented in
+  -- the audit report rather than guessed at.
+  -- Items ship only when their own drop-source table intersects units named
+  -- in the same text, which is what keeps carried delivery items out.
+  -- Applied only where ["obj"] is absent, so real data ships ahead of this.
+  local objfix = {
+    [2] = { ["I"] = { 16305 } }, -- Sharptalon's Claw
+    [23] = { ["I"] = { 16303 } }, -- Ursangous's Paw
+    [24] = { ["I"] = { 16304 } }, -- Shadumbra's Head
+    [269] = { ["U"] = { 288 } }, -- Seeking Wisdom
+    [281] = { ["U"] = { 285 } }, -- Reclaiming Goods
+    [285] = { ["U"] = { 285 } }, -- Search More Hovels
+    [361] = { ["U"] = { 1656 } }, -- A Letter Undelivered
+    [636] = { ["U"] = { 2755 } }, -- Legends of the Earth
+    [770] = { ["U"] = { 3056 } }, -- The Demon Scarred Cloak
+    [883] = { ["I"] = { 5099 } }, -- Lakota'mani
+    [884] = { ["I"] = { 5102 } }, -- Owatanka
+    [885] = { ["I"] = { 5103 } }, -- Washte Pawne
+    [1098] = { ["U"] = { 3849 } }, -- Deathstalkers in Shadowfang
+    [1265] = { ["U"] = { 4966 } }, -- The Missing Diplomat
+    [2969] = { ["U"] = { 5278 } }, -- Freedom for All Creatures
+    [2986] = { ["U"] = { 5901 } }, -- Call of Water
+    [3446] = { ["U"] = { 14834 } }, -- Into the Depths
+    [4863] = { ["U"] = { 10301 } }, -- Enraged Wildkin
+    [4866] = { ["U"] = { 10596 } }, -- Mother's Milk
+    [5048] = { ["U"] = { 10778 } }, -- Good Natured Emma
+    [5049] = { ["U"] = { 10778 } }, -- The Jeremiah Blues
+    [6000] = { ["U"] = { 6122 } }, -- Swearing to Gakin
+    [6601] = { ["U"] = { 11872 } }, -- Ascension...
+    [8183] = { ["I"] = { 19802 } }, -- The Heart of Hakkar
+    [40033] = { ["U"] = { 61987 } }, -- Finding Akh Z'ador
+    [40572] = { ["U"] = { 4972 } }, -- Aid Kagoro
+    [40948] = { ["U"] = { 61458 } }, -- Wolf Amongst Sheep
+    [41169] = { ["U"] = { 61748 } }, -- Bearer Of Bad News
+    [41234] = { ["U"] = { 61843 } }, -- To Raise An Ancient
+    [41324] = { ["U"] = { 61987 } }, -- Novice In A Barren Land
+    [41552] = { ["U"] = { 73102 } }, -- Renewed Teachings
+    [41825] = { ["I"] = { 58180 } }, -- The Matron Will Know
+    [41898] = { ["U"] = { 62786, 62789, 62791, 62794 } }, -- Twisted Relations
+    [41930] = { ["U"] = { 62934 } }, -- Proof of Conviction
+    [41931] = { ["U"] = { 62871 }, ["I"] = { 42171 } }, -- The Corruption of Timbermaw Hold
+    [41952] = { ["U"] = { 63092 } }, -- Out of the Moonlight
+    [41969] = { ["U"] = { 9690 }, ["I"] = { 42250 } }, -- Raiments of Ritual
+    [41995] = { ["U"] = { 63116 } }, -- Mindless Monster
+    [42003] = { ["I"] = { 12662, 42296 } }, -- The Silver Blade
+    [42005] = { ["U"] = { 60748 } }, -- The Rift Calls
+    [42014] = { ["U"] = { 63063, 63067 } }, -- Roots of the Grove
+    [42015] = { ["U"] = { 63064 } }, -- Lady Stargazer
+    [42016] = { ["U"] = { 63066 } }, -- In Lucid Dreams
+    [42047] = { ["U"] = { 63164 } }, -- Back to Sleep
+    [42052] = { ["U"] = { 62827 } }, -- In Blue Defiance
+    [42053] = { ["U"] = { 62830, 62831 } }, -- Jawtaker
+    [42056] = { ["U"] = { 63199 } }, -- Garments of the Three Siblings
+    [42075] = { ["U"] = { 63037, 63039 } }, -- Price of Betrayal
+    [42077] = { ["U"] = { 63068 } }, -- Mothshroud Falls
+    [42088] = { ["U"] = { 62996, 62999, 63000 } }, -- An’she’s Respite
+    [42090] = { ["U"] = { 63148, 63149 } }, -- Serpents Without Heads
+    [42092] = { ["U"] = { 62830 } }, -- A Star That Calls Back
+    [42094] = { ["U"] = { 63061, 63065, 63066 } }, -- The Moth’s Heresy
+    [42096] = { ["U"] = { 63142, 63146 } }, -- The Rot of Elun’aran
+    [42097] = { ["U"] = { 63141 } }, -- Keeper of the Broken Grove
+    [80341] = { ["U"] = { 1201 } }, -- Taming the Beast
+  }
+  for qid, obj in pairs(objfix) do
+    local entry = pfDB["quests"]["data-turtle"][qid]
+    if entry and not entry["obj"] then
+      entry["obj"] = obj
+    end
+  end
+end
+
 do -- area trigger
   -- Investigating Hateforge (Quest)
   pfDB["areatrigger"]["data-turtle"][40486] = { ["coords"] = { [1] = { 96.1, 57.6, 46 } } }

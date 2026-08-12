@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.0.7** — objective data restored for nine more Moonwhisper Coast quests (below). Previous: 1.0.6 (first two Moonwhisper quests), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.0.8** — the full-database audit: objective data restored for 56 more quests, every remaining gap classified (below). Previous: 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,26 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.0.8 — the full audit: every no-objective quest in the database, classified
+
+Prompted by three player reports in two days, the whole database went under the lens
+instead of one zone at a time. Of **6,889 merged quests, 2,580 carry no objective data**.
+The audit classified every one:
+
+- **1,265 talk/delivery + 9 reputation quests** — no objectives is *correct* for them;
+  the turn-in marker is the guidance. `/db checkdb` listing them is expected.
+- **39 deprecated/unused quests** — pins would be pointless.
+- **659 quests whose text names nothing that exists in the database** — the genuinely
+  absent class. These need a fresh server-data extraction, not client-side work.
+- **56 quests restored here.** A name-match pipeline (unit/item names from the database
+  found in the quest's own objective text, spawns and drop-sources verified, quest
+  enders and location mentions mechanically excluded, items only when their drop table
+  intersects units the text names) proposed candidates; every surviving row was then
+  reviewed by hand before shipping. Applied absent-only, like every block before it.
+- **268 quests with matches but not proof** — object-only matches (the "in Ironforge"
+  trap), cross-zone reuse of vanilla names by custom quests, ambiguous intent. Held for
+  future verification rather than guessed at; the full list lives in the audit report.
 
 ### 1.0.7 — nine more Moonwhisper Coast quests drew no pins
 
