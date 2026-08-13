@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.0.10** — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.0.11** — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,21 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.0.11 — the pack was hiding 35 quests the server serves
+
+The full pack-vs-server comparison (every quest, every field) surfaced the inverse of
+the Light of An'she bug: **35 quests carry a race or class restriction in the vanilla
+data that this server deliberately removed** — among them the epic-mount chains and
+Winter Veil quests opened to both factions. pfQuest was filtering their pins away from
+players the server offers them to. The restriction fields are removed to match the
+server. Also: 9 objective items the server lists appended to existing objectives (the
+Valthalak amulet pieces). Start/end links and all remaining masks verified complete —
+zero further gaps.
+
+Held for approval, not applied: 34 quests whose kill/interact objectives the server
+REWORKED (the pack's pins point at the old design) and 4 where the pack lists targets
+the server dropped — replacing shipped data needs a deliberate go.
 
 ### 1.0.10 — the collect batch: 197 quests, and the "absent" collectables were there all along
 

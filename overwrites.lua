@@ -1019,6 +1019,91 @@ do -- quests + items: site-authoritative collect batch (2026-08-13, 1.0.10)
   end
 end
 
+do -- quests: server-authoritative corrections, batch 2 (2026-08-13, 1.0.11)
+  -- From the full comparison of the pack against the assembled server
+  -- database (octowow-db). Two sets:
+  --
+  -- maskloosen: 35 quests where the pack carries a race or class restriction
+  -- the SERVER does not have (server mask = 0, unrestricted). The pack was
+  -- HIDING these quests from players the server serves them to -- the
+  -- inverse of the Light of An'she bug. The restriction field is removed;
+  -- values were vanilla-era data the server deliberately relaxed.
+  --
+  -- objappend: 9 quests where the server lists objective items the pack's
+  -- existing obj lacks (the Valthalak amulet chain among them). Ids are
+  -- appended to the existing objective tables, never replacing anything.
+  local maskloosen = {
+    [792] = "class", -- Vile Familiars (pack had 1245, server: unrestricted)
+    [1386] = "race", -- Assault on the Kolkar (pack had 77, server: unrestricted)
+    [6963] = "race", -- Stolen Winter Veil Treats (pack had 178, server: unrestricted)
+    [8302] = "race", -- The Hand of the Righteous (pack had 255, server: unrestricted)
+    [8314] = "race", -- Unraveling the Mystery (pack had 255, server: unrestricted)
+    [8732] = "race", -- Field Duty Papers (pack had 178, server: unrestricted)
+    [8915] = "race", -- An Earnest Proposition (pack had 178, server: unrestricted)
+    [8931] = "race", -- Just Compensation (pack had 255, server: unrestricted)
+    [8932] = "race", -- Just Compensation (pack had 255, server: unrestricted)
+    [8933] = "race", -- Just Compensation (pack had 255, server: unrestricted)
+    [8934] = "race", -- Just Compensation (pack had 255, server: unrestricted)
+    [8935] = "race", -- Just Compensation (pack had 255, server: unrestricted)
+    [8937] = "race", -- Just Compensation (pack had 255, server: unrestricted)
+    [8938] = "race", -- Just Compensation (pack had 255, server: unrestricted)
+    [8940] = "race", -- Just Compensation (pack had 255, server: unrestricted)
+    [8941] = "race", -- Just Compensation (pack had 255, server: unrestricted)
+    [8942] = "race", -- Just Compensation (pack had 178, server: unrestricted)
+    [8944] = "race", -- Just Compensation (pack had 255, server: unrestricted)
+    [8948] = "race", -- Anthion's Old Friend (pack had 255, server: unrestricted)
+    [8949] = "race", -- Falrin's Vendetta (pack had 255, server: unrestricted)
+    [8962] = "race", -- Components of Importance (pack had 255, server: unrestricted)
+    [8964] = "race", -- Components of Importance (pack had 255, server: unrestricted)
+    [8965] = "race", -- Components of Importance (pack had 255, server: unrestricted)
+    [8966] = "race", -- The Left Piece of Lord Valthalak's Amulet (pack had 255, server: unrestricted)
+    [8967] = "race", -- The Left Piece of Lord Valthalak's Amulet (pack had 255, server: unrestricted)
+    [8968] = "race", -- The Left Piece of Lord Valthalak's Amulet (pack had 255, server: unrestricted)
+    [8969] = "race", -- The Left Piece of Lord Valthalak's Amulet (pack had 255, server: unrestricted)
+    [8985] = "race", -- More Components of Importance (pack had 255, server: unrestricted)
+    [8988] = "race", -- More Components of Importance (pack had 255, server: unrestricted)
+    [8989] = "race", -- The Right Piece of Lord Valthalak's Amulet (pack had 255, server: unrestricted)
+    [8990] = "race", -- The Right Piece of Lord Valthalak's Amulet (pack had 255, server: unrestricted)
+    [8991] = "race", -- The Right Piece of Lord Valthalak's Amulet (pack had 255, server: unrestricted)
+    [8992] = "race", -- The Right Piece of Lord Valthalak's Amulet (pack had 255, server: unrestricted)
+    [9014] = "race", -- Saving the Best for Last (pack had 178, server: unrestricted)
+    [9378] = "race", -- DND FLAG The Dread Citadel - Naxxramas (pack had 255, server: unrestricted)
+  }
+  for qid, field in pairs(maskloosen) do
+    local entry = pfDB["quests"]["data-turtle"][qid]
+    if entry then
+      entry[field] = nil
+    end
+  end
+
+  local objappend = {
+    [3962] = { ["I"] = { 11522 } }, -- It&#039;s Dangerous to Go Alone
+    [8966] = { ["I"] = { 22049 } }, -- The Left Piece of Lord Valthalak&#039;s Amulet
+    [8967] = { ["I"] = { 22050 } }, -- The Left Piece of Lord Valthalak&#039;s Amulet
+    [8968] = { ["I"] = { 22051 } }, -- The Left Piece of Lord Valthalak&#039;s Amulet
+    [8969] = { ["I"] = { 22052 } }, -- The Left Piece of Lord Valthalak&#039;s Amulet
+    [8989] = { ["I"] = { 22049 } }, -- The Right Piece of Lord Valthalak&#039;s Amulet
+    [8990] = { ["I"] = { 22050 } }, -- The Right Piece of Lord Valthalak&#039;s Amulet
+    [8991] = { ["I"] = { 22051 } }, -- The Right Piece of Lord Valthalak&#039;s Amulet
+    [8992] = { ["I"] = { 22052 } }, -- The Right Piece of Lord Valthalak&#039;s Amulet
+  }
+  for qid, add in pairs(objappend) do
+    local entry = pfDB["quests"]["data-turtle"][qid]
+    if entry and entry["obj"] then
+      for kind, list in pairs(add) do
+        entry["obj"][kind] = entry["obj"][kind] or {}
+        local have = {}
+        for _, v in pairs(entry["obj"][kind]) do have[v] = true end
+        for _, v in pairs(list) do
+          if not have[v] then
+            table.insert(entry["obj"][kind], v)
+          end
+        end
+      end
+    end
+  end
+end
+
 do -- area trigger
   -- Investigating Hateforge (Quest)
   pfDB["areatrigger"]["data-turtle"][40486] = { ["coords"] = { [1] = { 96.1, 57.6, 46 } } }
