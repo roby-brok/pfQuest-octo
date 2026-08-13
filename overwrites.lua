@@ -1104,6 +1104,61 @@ do -- quests: server-authoritative corrections, batch 2 (2026-08-13, 1.0.11)
   end
 end
 
+do -- quests: server-authoritative REPLACEMENTS (2026-08-13, 1.0.12)
+  -- The only non-additive block in this file, applied on Roby's explicit
+  -- approval: 38 quests whose objectives the server REWORKED after the pack
+  -- data was extracted (34 changed target sets, 4 where the pack listed
+  -- targets the server dropped). The pack's old pins pointed at the previous
+  -- design; these entries REPLACE the objective table with the server's
+  -- current one, verbatim from the assembled server database (octowow-db).
+  local objreplace = {
+    [974] = { ["I"] = { 12472 } }, -- Finding the Source
+    [1435] = { ["I"] = { 6435, 6436 } }, -- The Burning of Spirits
+    [3520] = { ["I"] = { 10699 } }, -- Screecher Spirits
+    [5163] = { ["I"] = { 12928 } }, -- Are We There, Yeti?
+    [5206] = { ["I"] = { 13155, 13156 } }, -- Marauders of Darrowshire
+    [5441] = { ["I"] = { 16114 } }, -- Lazy Peons
+    [5561] = { ["I"] = { 13892 } }, -- Kodo Roundup
+    [5581] = { ["I"] = { 14547 } }, -- Portals of the Legion
+    [6661] = { ["I"] = { 17117 } }, -- Deeprun Rat Roundup
+    [6681] = { ["I"] = { 17125 } }, -- The Manor, Ravenholdt
+    [7029] = { ["I"] = { 17696 } }, -- Vyletongue Corruption
+    [7041] = { ["I"] = { 17696 } }, -- Vyletongue Corruption
+    [7629] = { ["I"] = { 18688 } }, -- Imp Delivery
+    [8249] = { ["I"] = { 115 } }, -- Hard Lock School
+    [8746] = { ["I"] = { 21211 } }, -- Metzen the Reindeer
+    [8762] = { ["I"] = { 21211 } }, -- Metzen the Reindeer
+    [9015] = { ["I"] = { 22047 } }, -- The Challenge
+    [9165] = { ["I"] = { 22593 } }, -- Writ of Safe Passage
+    [9257] = { ["I"] = { 22737 } }, -- Atiesh, Greatstaff of the Guardian
+    [9269] = { ["I"] = { 22737 } }, -- Atiesh, Greatstaff of the Guardian
+    [9270] = { ["I"] = { 22737 } }, -- Atiesh, Greatstaff of the Guardian
+    [9271] = { ["I"] = { 22737 } }, -- Atiesh, Greatstaff of the Guardian
+    [40056] = { ["I"] = { 3575, 3860, 12359, 17411 } }, -- Zinfizzlex's Portable Shredder Unit
+    [40099] = { ["U"] = { 91980, 91981 }, ["I"] = { 5438 } }, -- Attack from the Inside
+    [40124] = { ["U"] = { 6195 } }, -- Interfering Naga
+    [40141] = { ["I"] = { 60202, 60203 } }, -- The Boran Family
+    [40174] = { ["I"] = { 60373 } }, -- A Cannon's Misfortune
+    [40179] = { ["I"] = { 60253 } }, -- Exterminate the Rat
+    [40713] = { ["I"] = { 60944 } }, -- The Land of Kings
+    [41243] = { ["I"] = { 41197 } }, -- A Thirst of Hope
+    [41312] = { ["I"] = { 41371, 41373, 41397 } }, -- Restoration
+    [41383] = { ["I"] = { 61759 } }, -- Wisdom of Ur
+    [41659] = { ["U"] = { 62230, 62231, 62232 } }, -- The Sal'Galaz Mines
+    [41684] = { ["I"] = { 41747 } }, -- Shadow's Vision
+    [41694] = { ["I"] = { 41754 } }, -- To The Darkest Places
+    [80207] = { ["U"] = { 80205 }, ["I"] = { 80216 } }, -- Dark Iron Scrapping
+    [80703] = { ["I"] = { 53002 } }, -- Thandol Span
+    [80722] = { ["I"] = { 53010 } }, -- To Catch a Rat...
+  }
+  for qid, obj in pairs(objreplace) do
+    local entry = pfDB["quests"]["data-turtle"][qid]
+    if entry then
+      entry["obj"] = obj
+    end
+  end
+end
+
 do -- area trigger
   -- Investigating Hateforge (Quest)
   pfDB["areatrigger"]["data-turtle"][40486] = { ["coords"] = { [1] = { 96.1, 57.6, 46 } } }

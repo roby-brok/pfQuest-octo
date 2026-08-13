@@ -4,7 +4,7 @@
 ## X-Website: https://github.com/roby-brok/pfQuest-octo
 ## Contributors: paokkerkir, The Kludge Bureau, Gurky, Antealis, HumbleKagu, KasVital, Haaxor1689, IcemanHHW, fatpowaranga
 ## Notes: An Octo DB extension for pfQuest - TurtleWoW data plus the Octo corrections
-## Version: 1.0.11
+## Version: 1.0.12
 ## Dependencies: pfQuest
 ## SavedVariables: pfQuest_turtlecount
 

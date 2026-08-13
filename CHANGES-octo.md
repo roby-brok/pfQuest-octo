@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.0.11** — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.0.12** — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,20 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.0.12 — the 38 reworked quests now match the server
+
+The final batch of the server comparison, and the pack's first and only non-additive
+change — applied on explicit approval rather than by doctrine: **34 quests whose
+kill/interact objectives the server redesigned** after the pack data was extracted
+(*Screecher Spirits* pins the right spirit now, *The Burning of Spirits* the right
+totems), plus **4 where the pack listed targets the server dropped**. Their objective
+tables are replaced verbatim with the server's current ones.
+
+With this, every measurable category is server-consistent: objectives, masks,
+start/end links, item sources. What remains unfixable is documented: 726 collect
+quests with no source listed server-side, and the extraction holes (Moro'gai) that
+exist in no data export.
 
 ### 1.0.11 — the pack was hiding 35 quests the server serves
 
