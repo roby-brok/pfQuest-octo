@@ -747,6 +747,278 @@ do -- quests: site-authoritative corrections, batch 1 (2026-08-12, 1.0.9)
   end
 end
 
+do -- quests + items: site-authoritative collect batch (2026-08-13, 1.0.10)
+  -- The item pages of the server database are crawled and parsed; this ships
+  -- every collect quest whose objective items have a known source. 197 quests
+  -- gain ["I"] objectives (166 draw pins immediately). The 20 item entries
+  -- below are Moonwhisper collectables whose ground objects the extraction
+  -- carried all along under ids nothing referenced -- including the Frozen
+  -- Highborne Vials, the Meteor Shard and the Maras'ethil-era relics that
+  -- 1.0.8 had classified as genuinely absent. Drop percents are the site's.
+  -- 726 collect quests stay unfixed: no source is listed even server-side.
+  -- Absent-only throughout, like every block above.
+  local objfix = {
+    [78] = { ["I"] = { 921 } }, -- The Legend of Stalvan
+    [337] = { ["I"] = { 2794 } }, -- An Old History Book
+    [351] = { ["I"] = { 8623 } }, -- Find OOX-17/TN!
+    [373] = { ["I"] = { 2874 } }, -- The Unsent Letter
+    [383] = { ["I"] = { 2885 } }, -- Vital Intelligence
+    [460] = { ["I"] = { 3317 } }, -- Resting in Pieces
+    [485] = { ["I"] = { 8704 } }, -- Find OOX-09/HL!
+    [521] = { ["I"] = { 3554 } }, -- The Crown of Will
+    [522] = { ["I"] = { 3668 } }, -- Assassin's Contract
+    [531] = { ["I"] = { 2713 } }, -- Vyrin's Revenge
+    [551] = { ["I"] = { 3706 } }, -- The Ensorcelled Parchment
+    [554] = { ["I"] = { 3706 } }, -- Stormpike's Deciphering
+    [708] = { ["I"] = { 4613 } }, -- The Black Box
+    [723] = { ["I"] = { 4635 } }, -- Prospect of Faith
+    [724] = { ["I"] = { 4635 } }, -- Prospect of Faith
+    [819] = { ["I"] = { 4926 } }, -- Chen's Empty Keg
+    [824] = { ["I"] = { 16408 } }, -- Je'neu of the Earthen Ring
+    [832] = { ["I"] = { 4903 } }, -- Burning Shadows
+    [897] = { ["I"] = { 5138 } }, -- The Harvester
+    [906] = { ["I"] = { 5072 } }, -- Betrayal from Within
+    [909] = { ["I"] = { 16782 } }, -- Baron Aquanis
+    [922] = { ["I"] = { 5168 } }, -- Rellian Greenspyre
+    [927] = { ["I"] = { 5179 } }, -- The Moss-twined Heart
+    [968] = { ["I"] = { 5352 } }, -- The Powers Below
+    [1024] = { ["I"] = { 5463 } }, -- Raene's Cleansing
+    [1091] = { ["I"] = { 5717 } }, -- Kaela's Update
+    [1183] = { ["I"] = { 5852 } }, -- Goblin Sponsorship
+    [1188] = { ["I"] = { 5862 } }, -- Safety First
+    [1245] = { ["I"] = { 5947 } }, -- The Missing Diplomat
+    [1262] = { ["I"] = { 5942 } }, -- Report to Zor
+    [1392] = { ["I"] = { 6196 } }, -- Noboru the Cudgel
+    [1423] = { ["I"] = { 6172 } }, -- The Lost Supplies
+    [1457] = { ["I"] = { 6245 } }, -- The Karnitol Shipwreck
+    [1480] = { ["I"] = { 20310 } }, -- The Corrupter
+    [1898] = { ["I"] = { 7231 } }, -- The Deathstalkers
+    [1918] = { ["I"] = { 16408 } }, -- The Befouled Element
+    [1978] = { ["I"] = { 7294 } }, -- The Deathstalkers
+    [2198] = { ["I"] = { 7666 } }, -- The Shattered Necklace
+    [2766] = { ["I"] = { 8705 } }, -- Find OOX-22/FE!
+    [2871] = { ["I"] = { 9248 } }, -- Delivering the Relic
+    [2876] = { ["I"] = { 9250 } }, -- Ship Schedules
+    [2945] = { ["I"] = { 9326 } }, -- Grime-Encrusted Ring
+    [2978] = { ["I"] = { 9370 } }, -- The Gordunni Scroll
+    [3002] = { ["I"] = { 9371 } }, -- The Gordunni Orb
+    [3366] = { ["I"] = { 10441 } }, -- The Glowing Shard
+    [3373] = { ["I"] = { 10454 } }, -- The Essence of Eranikus
+    [3507] = { ["I"] = { 10597 } }, -- Betrayed
+    [3513] = { ["I"] = { 10621 } }, -- The Runed Scroll
+    [3518] = { ["I"] = { 10538 } }, -- Delivery to Magatha
+    [3541] = { ["I"] = { 10539 } }, -- Delivery to Jes'rimon
+    [3542] = { ["I"] = { 10540 } }, -- Delivery to Andron Gant
+    [3561] = { ["I"] = { 10541 } }, -- Delivery to Archmage Xylem
+    [3884] = { ["I"] = { 11116 } }, -- Williden's Journal
+    [4142] = { ["I"] = { 11316 } }, -- A Visit to Gregan
+    [4264] = { ["I"] = { 11446 } }, -- A Crumpled Up Note
+    [4451] = { ["I"] = { 11818 } }, -- The Key to Freedom
+    [4722] = { ["I"] = { 12289 } }, -- Beached Sea Turtle
+    [4723] = { ["I"] = { 12242 } }, -- Beached Sea Creature
+    [4882] = { ["I"] = { 12558 } }, -- Guarding Secrets
+    [4883] = { ["I"] = { 12558 } }, -- Guarding Secrets
+    [5083] = { ["I"] = { 12771 } }, -- Winterfall Firewater
+    [5089] = { ["I"] = { 12780 } }, -- General Drakkisath's Command
+    [5123] = { ["I"] = { 12842 } }, -- The Final Piece
+    [5128] = { ["I"] = { 12842 } }, -- Words of the High Chief
+    [5202] = { ["I"] = { 13140 } }, -- A Strange Red Key
+    [5262] = { ["I"] = { 13250 } }, -- The Truth Comes Crashing Down
+    [5462] = { ["I"] = { 13585 } }, -- The Dying, Ras Frostwhisper
+    [5463] = { ["I"] = { 13585 } }, -- Menethil's Gift
+    [5582] = { ["I"] = { 13920 } }, -- Healthy Dragon Scale
+    [6522] = { ["I"] = { 17008 } }, -- An Unholy Alliance
+    [6564] = { ["I"] = { 16790 } }, -- Allegiance to the Old Gods
+    [6844] = { ["I"] = { 17346 } }, -- Umber, Archivist
+    [6922] = { ["I"] = { 16782 } }, -- Baron Aquanis
+    [6981] = { ["I"] = { 10441 } }, -- The Glowing Shard
+    [7490] = { ["I"] = { 18422 } }, -- Victory for the Horde
+    [7495] = { ["I"] = { 18423 } }, -- Victory for the Alliance
+    [7498] = { ["I"] = { 18356 } }, -- Garona: A Study on Stealth and Treachery
+    [7499] = { ["I"] = { 18357 } }, -- Codex of Defense
+    [7500] = { ["I"] = { 18358 } }, -- The Arcanist's Cookbook
+    [7501] = { ["I"] = { 18359 } }, -- The Light and How To Swing It
+    [7502] = { ["I"] = { 18360 } }, -- Harnessing Shadows
+    [7503] = { ["I"] = { 18361 } }, -- The Greatest Race of Hunters
+    [7504] = { ["I"] = { 18362 } }, -- Holy Bologna: What the Light Won't Tell You
+    [7505] = { ["I"] = { 18363 } }, -- Frost Shock and You
+    [7506] = { ["I"] = { 18364 } }, -- The Emerald Dream...
+    [7507] = { ["I"] = { 18401 } }, -- Foror's Compendium
+    [7632] = { ["I"] = { 18703 } }, -- The Ancient Leaf
+    [7644] = { ["I"] = { 18792 } }, -- Blessed Arcanite Barding
+    [7735] = { ["I"] = { 18969 } }, -- Pristine Yeti Hide
+    [7738] = { ["I"] = { 18972 } }, -- Perfect Yeti Hide
+    [7781] = { ["I"] = { 19003 } }, -- The Lord of Blackrock
+    [7783] = { ["I"] = { 19002 } }, -- The Lord of Blackrock
+    [7787] = { ["I"] = { 19018 } }, -- Rise, Thunderfury!
+    [7937] = { ["I"] = { 19423 } }, -- Your Fortune Awaits You...
+    [7938] = { ["I"] = { 19424 } }, -- Your Fortune Awaits You...
+    [7944] = { ["I"] = { 19443 } }, -- Your Fortune Awaits You...
+    [7945] = { ["I"] = { 19452 } }, -- Your Fortune Awaits You...
+    [8308] = { ["I"] = { 20461 } }, -- Brann Bronzebeard's Lost Letter
+    [8446] = { ["I"] = { 20644 } }, -- Shrouded in Nightmare
+    [8470] = { ["I"] = { 20741 } }, -- Deadwood Ritual Totem
+    [8471] = { ["I"] = { 20742 } }, -- Winterfall Ritual Totem
+    [8552] = { ["I"] = { 3985 } }, -- The Monogrammed Sash
+    [8784] = { ["I"] = { 21230 } }, -- Secrets of the Qiraji
+    [8791] = { ["I"] = { 21220 } }, -- The Fall of Ossirian
+    [8801] = { ["I"] = { 21221 } }, -- C'Thun's Legacy
+    [8802] = { ["I"] = { 21221 } }, -- The Savior of Kalimdor
+    [9120] = { ["I"] = { 22520 } }, -- The Fall of Kel'Thuzad
+    [40231] = { ["I"] = { 60188 } }, -- The Forgotten Tome
+    [40236] = { ["I"] = { 60319 } }, -- The Secrets of Darkforging
+    [40389] = { ["I"] = { 4866 } }, -- Zalazane's Fall
+    [40391] = { ["I"] = { 60521 } }, -- A Hunt for Honor
+    [40695] = { ["I"] = { 60935 } }, -- The Sputtervalve Fix
+    [40696] = { ["I"] = { 60935 } }, -- The Fixed Sputtervalve Conductor
+    [40723] = { ["I"] = { 60817 } }, -- Honoring Treaties
+    [40749] = { ["I"] = { 60989 } }, -- Translating The Unknown
+    [40797] = { ["I"] = { 61153 } }, -- A Foul Effigy
+    [40931] = { ["I"] = { 61474 } }, -- The Gilneas Lighthouse III
+    [41042] = { ["I"] = { 61742 } }, -- The Word of the Archdruid
+    [41063] = { ["I"] = { 61759 } }, -- Scythe of the Goddess
+    [41064] = { ["I"] = { 61759 } }, -- Scythe of the Goddess
+    [41066] = { ["I"] = { 61759 } }, -- Scythe of the Goddess
+    [41091] = { ["I"] = { 61775 } }, -- Finding a Demon Hunter
+    [41195] = { ["I"] = { 41122 } }, -- Message for the Windrunner
+    [41352] = { ["I"] = { 41398 } }, -- Auntie Tillia
+    [41377] = { ["I"] = { 61759 } }, -- Scythe of the Goddess
+    [41380] = { ["I"] = { 61759 } }, -- Scythe of the Goddess
+    [41806] = { ["I"] = { 41907 } }, -- Dragonfire Bombs!
+    [41820] = { ["I"] = { 41924 } }, -- To My Father, Vol'jin
+    [41899] = { ["I"] = { 41996 } }, -- Blackroot Totems
+    [41905] = { ["I"] = { 42072 } }, -- Dark Iron Aggression
+    [41907] = { ["I"] = { 42073 } }, -- Riverhorn Village
+    [41908] = { ["I"] = { 42001 } }, -- Raw Draenethyst Formation
+    [41909] = { ["I"] = { 42015 } }, -- Glowing Draenethyst Cluster
+    [41911] = { ["I"] = { 42133 } }, -- Wolf in Sheep's Clothing
+    [41913] = { ["I"] = { 42134, 42135, 8831, 42001 } }, -- Draenei Divination
+    [41914] = { ["I"] = { 42137, 42138 } }, -- Hooves and Horns, Clad in Red
+    [41918] = { ["I"] = { 42139 } }, -- Silken Song
+    [41919] = { ["I"] = { 42139 } }, -- More Silk for the Wounded
+    [41935] = { ["I"] = { 42179, 42178 } }, -- Rite of Resurrection
+    [41936] = { ["I"] = { 42181, 42180 } }, -- Twisting Rift Crystal
+    [41938] = { ["I"] = { 42206 } }, -- Windtorn Crest Stone
+    [41940] = { ["I"] = { 42207, 42208, 42209, 42210 } }, -- Elemental Cores
+    [41941] = { ["I"] = { 42211 } }, -- Duality of Flame
+    [41942] = { ["I"] = { 42212, 42213 } }, -- The Plaguewood
+    [41944] = { ["I"] = { 42216, 42010 } }, -- The Long Hunt
+    [41945] = { ["I"] = { 42217 } }, -- Respect the Elderly
+    [41947] = { ["I"] = { 42218 } }, -- Wanted: Tama’an the Ruthless
+    [41949] = { ["I"] = { 42221 } }, -- Horns of their Allies
+    [41950] = { ["I"] = { 42222 } }, -- Parcel to Nowhere
+    [41951] = { ["I"] = { 42222 } }, -- Merchant’s Knowledge
+    [41953] = { ["I"] = { 42224 } }, -- Draenethyst Recovery
+    [41955] = { ["I"] = { 42215, 42225, 42226, 42227 } }, -- Tricolored Hide-ra
+    [41956] = { ["I"] = { 58306 } }, -- Bounty: Head of Highlord Bolvar Fordragon
+    [41957] = { ["I"] = { 58307 } }, -- Bounty: Head of King Magni Bronzebeard
+    [41958] = { ["I"] = { 58309 } }, -- Bounty: Head of Arch Druid Fandral Staghelm
+    [41959] = { ["I"] = { 58308 } }, -- Bounty: Head of Cairne Bloodhoof
+    [41960] = { ["I"] = { 58310 } }, -- Bounty: Head of Thrall
+    [41961] = { ["I"] = { 58311 } }, -- Bounty: Head of Lady Sylvanas Windrunner
+    [41968] = { ["I"] = { 42246 } }, -- Worthy of Cloudhoof
+    [41974] = { ["I"] = { 42258 } }, -- Glimmering Hydra Scale
+    [41976] = { ["I"] = { 42262 } }, -- In Search of Tauren Relics
+    [41977] = { ["I"] = { 42262 } }, -- Relics of the Windhorn Tribe
+    [41984] = { ["I"] = { 19221 } }, -- Restocking for Vacation
+    [41987] = { ["I"] = { 22527 } }, -- Core of the Elements
+    [41989] = { ["I"] = { 42273 } }, -- Slithering Snakes
+    [41991] = { ["I"] = { 42000 } }, -- Preparation for Hibernation
+    [41992] = { ["I"] = { 42278 } }, -- Youngest Sibling, Always Last
+    [41997] = { ["I"] = { 42279 } }, -- Taste for Hydra
+    [41998] = { ["I"] = { 42001 } }, -- Collecting Draenethyst
+    [41999] = { ["I"] = { 42280 } }, -- Before They Hatch
+    [42001] = { ["I"] = { 42281 } }, -- What Upsets the Elements?
+    [42008] = { ["I"] = { 42300 } }, -- The Finest Pelt
+    [42010] = { ["I"] = { 42301 } }, -- Powerless Runestone
+    [42017] = { ["I"] = { 42304 } }, -- Heart Full of Shadows
+    [42018] = { ["I"] = { 42304 } }, -- Gifting the Matron
+    [42037] = { ["I"] = { 42320 } }, -- Airfield Supplies
+    [42040] = { ["I"] = { 42326 } }, -- A Grave Misunderstanding!
+    [42043] = { ["I"] = { 42336 } }, -- Belated Preservation
+    [42065] = { ["I"] = { 42351 } }, -- Falling the Fallen
+    [42066] = { ["I"] = { 42352, 42353, 42354, 42355 } }, -- Ghosts of Maras’ethil
+    [42067] = { ["I"] = { 42356 } }, -- Heaven Falling Down
+    [42074] = { ["I"] = { 42380 } }, -- Seeking the Truth
+    [42076] = { ["I"] = { 42381 } }, -- Return to the Dream
+    [42079] = { ["I"] = { 42385 } }, -- Secrets of Moonwhisper
+    [42082] = { ["I"] = { 42387, 42388 } }, -- Starstrider Headdress
+    [42083] = { ["I"] = { 42389 } }, -- The Rod of Preservation
+    [42084] = { ["I"] = { 42390 } }, -- A Tale of Scales
+    [42086] = { ["I"] = { 42394 } }, -- Echoes of Nendis
+    [42087] = { ["I"] = { 42395 } }, -- The Light of Elunaris
+    [42089] = { ["I"] = { 42396 } }, -- Scales of the Tideblade
+    [42093] = { ["I"] = { 42397 } }, -- Feathers on Point
+    [55051] = { ["I"] = { 81334 } }, -- Return to Port!
+    [70057] = { ["I"] = { 70035 } }, -- A Simple Memory
+    [80321] = { ["I"] = { 80868 } }, -- [Deprecated] The Lies that Bind Us
+    [80322] = { ["I"] = { 80868 } }, -- [Deprecated] The Lies That Bind Us
+    [80323] = { ["I"] = { 80868 } }, -- [Deprecated] The Lies That Bind Us
+    [80404] = { ["I"] = { 81284 } }, -- Delivery for Drazzit
+  }
+  for qid, obj in pairs(objfix) do
+    local entry = pfDB["quests"]["data-turtle"][qid]
+    if entry and not entry["obj"] then
+      entry["obj"] = obj
+    end
+  end
+
+  local itemfix = {
+    [42072] = { ["O"] = { [2020263] = 100 } },
+    [42073] = { ["O"] = { [2020264] = 100 } },
+    [42178] = { ["O"] = { [179703] = 30 } },
+    [42180] = { ["O"] = { [179703] = 30 } },
+    [42211] = { ["O"] = { [2020310] = 100 } },
+    [42213] = { ["O"] = { [2020311] = 100 } },
+    [42262] = { ["O"] = { [2020320] = 100 } },
+    [42273] = { ["O"] = { [2020321] = 100 } },
+    [42278] = { ["O"] = { [2020326] = 100 } },
+    [42280] = { ["O"] = { [2020327] = 100 } },
+    [42301] = { ["O"] = { [2020334] = 100 } },
+    [42320] = { ["O"] = { [2020338] = 100 } },
+    [42326] = { ["O"] = { [2020339] = 100 } },
+    [42336] = { ["O"] = { [2020420] = 100 } },
+    [42356] = { ["O"] = { [2020342] = 100 } },
+    [42380] = { ["O"] = { [2020343] = 100 } },
+    [42389] = { ["O"] = { [2020344] = 100 } },
+    [42394] = { ["O"] = { [2020345] = 100, [2020346] = 100 } },
+    [42395] = { ["O"] = { [300609] = 100, [2020346] = 100 } },
+    [42397] = { ["O"] = { [300608] = 100 } },
+  }
+  local itemnames = {
+    [42072] = "Refugee Supplies",
+    [42073] = "Riverhorn Heirloom",
+    [42178] = "Rite of Resurrection",
+    [42180] = "Twisting Rift Crystal",
+    [42211] = "Volcanic Soil",
+    [42213] = "Twisted Tree Sapling",
+    [42262] = "Windhorn Relic",
+    [42273] = "Cracked Idol of Neptulon",
+    [42278] = "Scroll of Lo’sho",
+    [42280] = "Mothsilk Cocoon",
+    [42301] = "Frozen Highborne Vial",
+    [42320] = "Airfield Supplies",
+    [42326] = "Tablet of Kaz'gan",
+    [42336] = "Elunaris Relic",
+    [42356] = "Meteor Shard",
+    [42380] = "Worn Letter",
+    [42389] = "Rod of Preservation",
+    [42394] = "Nendis Memento",
+    [42395] = "Relic of Elunaris",
+    [42397] = "Azureshimmer Hippogryph Feather",
+  }
+  for iid, data in pairs(itemfix) do
+    if not pfDB["items"]["data-turtle"][iid] then
+      pfDB["items"]["data-turtle"][iid] = data
+    end
+  end
+  for iid, nm in pairs(itemnames) do
+    if not pfDB["items"]["enUS-turtle"][iid] then
+      pfDB["items"]["enUS-turtle"][iid] = nm
+    end
+  end
+end
+
 do -- area trigger
   -- Investigating Hateforge (Quest)
   pfDB["areatrigger"]["data-turtle"][40486] = { ["coords"] = { [1] = { 96.1, 57.6, 46 } } }

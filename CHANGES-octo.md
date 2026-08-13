@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.0.9** — first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.0.10** — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,20 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.0.10 — the collect batch: 197 quests, and the "absent" collectables were there all along
+
+With the item pages of the server database crawled, every collect quest whose objective
+items have a known source gets its `["I"]` objective — 197 quests, 166 of them with
+sources already in the unit data, so their pins draw immediately. The 20 new item
+entries are the quiet headline: the Frozen Highborne Vials, the Meteor Shard, the
+Maras'ethil-era relics — all extracted long ago as ground objects that nothing
+referenced, classified "genuinely absent" by the 1.0.8 audit, and now wired up with the
+server's own drop data. Also recovered this way: *Taste for Hydra* (the Whispering
+Hydra had 40+ coast spawns all along; an earlier search truncated past it).
+
+726 collect quests remain unfixed for an honest reason: no source is listed even
+server-side.
 
 ### 1.0.9 — first batch from the server's own database
 
