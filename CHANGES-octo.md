@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.0.12** — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.0.13** — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,25 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.0.13 — Poisoned Water pins the Blighted Surges
+
+A player report: *Poisoned Water* (6804, Duke Hydraxis's Eastern Plaguelands errand)
+showed nothing on the map. The quest's bracers drop from **Discordant Surges, which do
+not exist in the world** — one appears only when the Aspect of Neptulon is used on a
+**Blighted Surge** standing in the stagnant ponds, and every database (this pack, the
+server's own export, vanilla data) accordingly records zero spawns for the dropper.
+The Blighted Surges themselves are well-recorded, so they are now the quest's unit
+objective: the pins mark exactly where the quest happens, and the transformation
+produces the dropper on the spot. The base item objective rides along because the
+per-field merge replaces `["obj"]` whole.
+
+The same report round also flagged *The Key to Karazhan IV*, *One Heir to Another*,
+*Brother's Duty* and *In Need of Water* as pin-less: all four verified against the
+server database as talk-to/delivery quests whose enders (Krog, Baine Bloodhoof,
+Hulfnar Stonetotem, Duke Hydraxis) have spawns — their turn-in pins already draw, and
+`/db checkdb` (in the pfQuest forks) now names that pin instead of red-flagging them.
+No data change was needed for those four.
 
 ### 1.0.12 — the 38 reworked quests now match the server
 

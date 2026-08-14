@@ -603,6 +603,29 @@ do -- quests: restore missing objective data (2026-08-12, /db checkdb reports)
   end
 end
 
+do -- quests: Poisoned Water pins the Blighted Surges (2026-08-14, player report)
+  -- "Poisoned Water doesn't show up in pfQuest": quest 6804 sends you to use
+  -- the Aspect of Neptulon on the poisoned elementals of Eastern Plaguelands.
+  -- Those are the Blighted Surges (8519) standing in the stagnant ponds; on
+  -- use, one transforms into the Discordant Surge (13279) that drops the
+  -- Discordant Bracers. The dropper never stands in the world -- zero spawns
+  -- in this database, the server's own export and vanilla data alike -- so
+  -- the Blighted Surges are pinned as the unit objective: they mark exactly
+  -- where the quest happens. The bracers' item objective from the base
+  -- database is repeated here because the turtle merge (patchentry in
+  -- patchtable.lua) replaces the ["obj"] field whole.
+  --
+  -- The same 2026-08-13 checkdb report listed 40823 / 42070 / 42020 / 42049:
+  -- all four verified against the server database as talk-to or delivery
+  -- quests (enders Krog, Baine Bloodhoof, Hulfnar Stonetotem, Duke Hydraxis,
+  -- each with spawns). Their turn-in pins already draw; /db checkdb now
+  -- names that pin instead of flagging them.
+  local entry = pfDB["quests"]["data-turtle"][6804]
+  if entry and not entry["obj"] then
+    entry["obj"] = { ["I"] = { 17309 }, ["U"] = { 8519 } }
+  end
+end
+
 do -- quests: restore missing objective data in bulk (2026-08-12, 1.0.8 audit)
   -- Result of the full-database audit: of 6,889 merged quests, 2,580 carry no
   -- ["obj"]. 1,265 are talk/delivery texts and 9 reputation grinds (no
