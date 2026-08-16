@@ -104,6 +104,20 @@ loc_core = pfDB["professions"][loc] or pfDB["professions"]["enUS"]
 loc_update = pfDB["professions"][loc.."-turtle"] or pfDB["professions"]["enUS-turtle"]
 if loc_update then patchtable(loc_core, loc_update) end
 
+-- Release our locale tables now that everything above has merged out of them.
+-- base pfQuest's freelocales() cannot do this for us: it walks pfDB.locales,
+-- whose keys are plain codes ("deDE"), so our "deDE-turtle" keys were invisible
+-- to it and stayed resident for the whole session -- even for locales whose
+-- base table had already been freed, meaning the merge above skipped them and
+-- nothing ever read them at all.
+for _, db in pairs(dbs) do
+  for locale in pairs(pfDB.locales) do
+    if pfDB[db][locale.."-turtle"] then
+      pfDB[db][locale.."-turtle"] = nil
+    end
+  end
+end
+
 if pfDB["minimap-turtle"] then patchtable(pfDB["minimap"], pfDB["minimap-turtle"]) end
 if pfDB["meta-turtle"] then patchtable(pfDB["meta"], pfDB["meta-turtle"]) end
 

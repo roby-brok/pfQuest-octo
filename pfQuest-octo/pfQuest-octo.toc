@@ -4,17 +4,14 @@
 ## X-Website: https://github.com/roby-brok/pfQuest-octo
 ## Contributors: paokkerkir, The Kludge Bureau, Gurky, Antealis, HumbleKagu, KasVital, Haaxor1689, IcemanHHW, fatpowaranga
 ## Notes: An Octo DB extension for pfQuest - TurtleWoW data plus the Octo corrections
-## Version: 1.0.13
+## Version: 1.1.0
 ## Dependencies: pfQuest
 ## SavedVariables: pfQuest_turtlecount
 
 init\data-turtle.xml
 init\enUS-turtle.xml
-init\deDE-turtle.xml
-init\esES-turtle.xml
-init\ptBR-turtle.xml
-init\zhCN-turtle.xml
-init\ruRU-turtle.xml
+
+localeload.lua
 
 overwrites.lua
 

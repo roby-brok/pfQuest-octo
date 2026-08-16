@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.0.13** — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.1.0** — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,30 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.1.0 — the pack stops loading five languages you do not read
+
+Every login parsed all six locale databases — about 22 MB of Lua source — and then kept
+them for the entire session. Two separate problems, both fixed here.
+
+**They were never freed.** Base pfQuest reclaims its own unused locales through
+`freelocales()`, but that walks `pfDB.locales`, whose keys are plain codes (`deDE`). This
+pack stores its tables one key over, as `deDE-turtle`, so they were invisible to it and
+stayed resident. Worse, base pfQuest frees its non-active `items`/`units`/`objects`
+locales *before* this pack merges, so for those the merge found no base table to write
+into and skipped them — the data was loaded, never read, and never released.
+`patchtable.lua` now drops every `<locale>-turtle` table once the merge is done.
+
+**They were loaded at all.** Freeing still pays the parse cost first, and that peak
+arrives before any addon code can run, so no option can avoid it. Each language is now
+its own `LoadOnDemand` addon (`pfQuest-octo-deDE` and friends) and `localeload.lua` pulls
+in only the one matching `GetLocale()`. `enUS` stays in the main addon because the merge
+falls back to `enUS-turtle` for locales with no pack data.
+
+Nothing changes for English clients beyond the saving. Other languages keep their text by
+copying one extra folder — see [Install](README.md#install); the download now carries
+correctly named folders, so the old rename step is gone.
+
 
 ### 1.0.13 — Poisoned Water pins the Blighted Surges
 

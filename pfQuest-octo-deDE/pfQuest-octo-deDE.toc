@@ -1,0 +1,10 @@
+## Interface: 11200
+## Title: |cff33ffccpf|cffffffffQuest |cffcccccc[Octo DB] Deutsch
+## Author: Shagu, paokkerkir, The Kludge Bureau - merged by Roby_Brok
+## X-Website: https://github.com/roby-brok/pfQuest-octo
+## Notes: German text for the Octo DB pack. Loaded on demand by pfQuest-octo when your client runs deDE; costs nothing otherwise.
+## Version: 1.1.0
+## Dependencies: pfQuest
+## LoadOnDemand: 1
+
+init\deDE-turtle.xml

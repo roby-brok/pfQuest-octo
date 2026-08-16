@@ -54,14 +54,19 @@ The pack's own code changes and fixes are listed in **[CHANGES-octo.md](CHANGES-
 a standalone addon.
 
 1. **[Download](https://github.com/roby-brok/pfQuest-octo/archive/refs/heads/master.zip)**
-2. Unpack the zip
-3. **Rename the folder `pfQuest-octo-master` to `pfQuest-octo`** — this step is not optional
-4. Move `pfQuest-octo` into `Wow-Directory\Interface\AddOns`
+2. Unpack the zip and open the `pfQuest-octo-master` folder inside it
+3. Copy **`pfQuest-octo`** into `Wow-Directory\Interface\AddOns`
+4. *Non-English clients only:* also copy the one folder matching your language —
+   `pfQuest-octo-deDE`, `-esES`, `-ptBR`, `-ruRU` or `-zhCN`
 5. Restart WoW
 
-Step 3 matters because WoW only loads an addon when the folder name matches the `.toc` inside it.
-A folder called `pfQuest-octo-master` containing `pfQuest-octo.toc` is skipped in silence — no
-error, no entry in the addon list, it simply never runs.
+No renaming any more. Since 1.1.0 the download contains the addon folders already correctly
+named, so the old trap — a folder called `pfQuest-octo-master` holding `pfQuest-octo.toc`, which
+WoW skips in silence with no error and no entry in the addon list — cannot happen.
+
+**English clients need only `pfQuest-octo`.** The language folders are load-on-demand: the pack
+pulls in the single one matching your client and never touches the others, so copying all of them
+costs nothing but disk. Copying none of them is fine too — quest text simply stays English.
 
 **Remove `pfQuest-turtle` if you have it.** Its data is already included here, and leaving both
 installed puts you right back in the situation this pack was built to avoid.
