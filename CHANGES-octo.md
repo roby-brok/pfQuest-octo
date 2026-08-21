@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.1.4** — *Oink, Oink!* and the pigs, plus a correction to what 1.1.1 claimed. Previous: 1.1.3 — the relocated Alah'Thalas flight master. Previous: 1.1.2 — three quests OctoWoW never implemented, removed. Previous: 1.1.1 — three NPCs the world spawns that the pack had no record of, and the missing turn-in for *Shellcoins*. Previous: 1.1.0 — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.1.5** — Baron Rivendare's phantom Stormwind pin, found by reading every patch note the server has published. Previous: 1.1.4 — *Oink, Oink!* and the pigs, plus a correction to what 1.1.1 claimed. Previous: 1.1.3 — the relocated Alah'Thalas flight master. Previous: 1.1.2 — three quests OctoWoW never implemented, removed. Previous: 1.1.1 — three NPCs the world spawns that the pack had no record of, and the missing turn-in for *Shellcoins*. Previous: 1.1.0 — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,29 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.1.5 — one phantom pin, from reading all twenty patch notes
+
+**Baron Rivendare (50519)** carried two coordinates here — Stormwind `44.4/81.6` and Orgrimmar
+`74/34.9` — while the server has only Orgrimmar. The 2026-08-06 notes say *"Baron Rivendale was
+removed him from the bottom of the map"*, and 81.6 is the lower part of the Stormwind map. The
+Stormwind pin is gone.
+
+**How it was found matters more than the fix.** The unit exists on both sides and only one of its
+coordinates is stale, so an id-set diff cannot see it — the same blind spot that hid the relocated
+flight master in 1.1.3. It turned up by reading the patch notes.
+
+A general coordinate-level scan was attempted and abandoned. Zone-name resolution does not hold up
+across the server's 105 distinct spawn zone names: `aowow_zones` covers 59 of them under different
+naming, multi-zone critters poison the voting, and the pack legitimately stores both a sub-zone
+coordinate and its parent-map projection. Two passes flagged 17,603 then 13,226 coordinates, with
+"Toad" and "Snake" at the top — ambient critters that really do spawn everywhere. Until there is an
+authoritative zone table, the patch notes are the dependable source for relocations and removals.
+
+All twenty patch-note threads the server has published, back to April 2026, were read for this. The
+rest came back clean: everything else they add or move is already here, including the three quests
+added on 2026-07-11, Rivash the Deceiver, and *The Great Iqa'quluk* (41983), which is a fishing
+quest rather than an NPC.
 
 ### 1.1.4 — *Oink, Oink!*, and a correction
 

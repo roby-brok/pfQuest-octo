@@ -1884,6 +1884,25 @@ do -- quests/units: "Oink, Oink!" and the pigs (2026-08-21, second extract pass)
   end
 end
 
+do -- units: drop Baron Rivendare's phantom Stormwind pin (2026-08-06 patch notes)
+  -- "Baron Rivendale was removed him from the bottom of the map." The pack still carried
+  -- 50519 at two coords -- Stormwind 44.4/81.6 and Orgrimmar 74/34.9 -- while the server
+  -- has only the Orgrimmar one, and 81.6 is indeed the lower part of the Stormwind map.
+  --
+  -- Found by reading the patch notes, not by diffing: the unit exists on both sides and
+  -- only one of its coords is stale, which an id-set comparison cannot see. A general
+  -- coordinate-level scan was attempted and abandoned -- zone-name resolution is not
+  -- reliable across the server's 105 distinct spawn zone names, so it flagged thousands
+  -- of ambient critters as strays. Patch notes remain the dependable source for this.
+  --
+  -- Rebuilt rather than table.remove'd so the surviving pin lands at index 1 with no hole.
+  if pfDB["units"]["data-turtle"][50519] then
+    pfDB["units"]["data-turtle"][50519]["coords"] = {
+      [1] = { 74, 34.9, 1637, 120 },
+    }
+  end
+end
+
 -- Set last. A top-level error anywhere above stops this file, so if this
 -- flag is missing the overwrites did not all apply -- that failure mode
 -- cost 166 silently dropped corrections before 1.0.2. patchtable.lua
