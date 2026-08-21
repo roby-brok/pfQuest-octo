@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.1.3** — the relocated Alah'Thalas flight master. Previous: 1.1.2 — three quests OctoWoW never implemented, removed. Previous: 1.1.1 — three NPCs the world spawns that the pack had no record of, and the missing turn-in for *Shellcoins*. Previous: 1.1.0 — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.1.4** — *Oink, Oink!* and the pigs, plus a correction to what 1.1.1 claimed. Previous: 1.1.3 — the relocated Alah'Thalas flight master. Previous: 1.1.2 — three quests OctoWoW never implemented, removed. Previous: 1.1.1 — three NPCs the world spawns that the pack had no record of, and the missing turn-in for *Shellcoins*. Previous: 1.1.0 — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,31 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.1.4 — *Oink, Oink!*, and a correction
+
+**The 1.1.1 entry below was wrong, and this is the correction.** That pass read the extract before
+its NPC and quest scans had finished; the relation tables were short by **562 questgivers and 607
+enders**. On that data none of the quests the server has and this pack lacked appeared obtainable.
+With the scans complete, three of them are — and two of their questgivers had been dismissed as
+scenery in the same pass.
+
+Added:
+
+- **Oink, Oink! (700001)** and **Pig (900200)**. An ordinary level 1 Elwynn quest: the Pig both
+  starts and ends it, and *Raw Black Truffle* (4608) is already in this pack and already drops from
+  creatures it already knows, so the objective resolves with nothing else added. The Pig stands in
+  Elwynn and Tirisfal.
+- **Ozzy**, all eight starting zones, one entry id per zone, as plain units so lookups answer.
+
+Deliberately **not** wired: Ozzy's two quests, 42201 *Reclaiming Ozzy* and 42202 *Reclaiming
+Buccaneer Bubbles*. Both are level 0 in zone 0 with no objective text and the same NPC at each end,
+which reads as a pet reclaim service rather than content — and only the Dun Morogh Ozzy carries the
+relations at all, which is itself a sign the data describes something other than a quest.
+
+The general lesson, alongside the one in 1.1.3: a partial extract does not announce itself. Its
+tables are populated and self-consistent, and only a second pass showed the first had been short.
+Row counts are worth diffing between refreshes, not just against the pack.
 
 ### 1.1.3 — the Alah'Thalas flight master moved
 
@@ -62,9 +87,10 @@ the data so the database browser cannot surface them either.
 Checked against a fresh server extract rather than the database site: of 10,856 creatures with
 real spawns, only **72** were absent from this pack, and of those only three carry anything a
 player would look up. The other 69 are mount displays, script triggers, waypoints, and ambient
-NPCs pfQuest has no business drawing. Quest coverage came out clean — 8 quests exist server-side
-without an entry here, and not one of them has both a questgiver and a turn-in, so none is
-obtainable.
+NPCs pfQuest has no business drawing. ~~Quest coverage came out clean — 8 quests exist server-side without an entry here, and not one of
+them has both a questgiver and a turn-in, so none is obtainable.~~ **Wrong — corrected in 1.1.4.**
+That extract was read before its NPC and quest scans had finished, and its relation tables were
+short by 562 questgivers and 607 enders. Three of those eight are obtainable; see 1.1.4.
 
 **Elodia is the real fix.** *Shellcoins* (80381) was already in the pack with its collect item,
 but with no `["end"]`. Its objective reads "return to Elodia" while the map showed nowhere to
