@@ -1903,6 +1903,29 @@ do -- units: drop Baron Rivendare's phantom Stormwind pin (2026-08-06 patch note
   end
 end
 
+do -- zones: give Alah'Thalas (2040) a real transform (2026-08-21)
+  -- The shipped table carried [2040] = { 0, 0, 0, 0, 0 }. That is not an empty slot the
+  -- live read can fill: pfQuest builds its zone index from the client's WorldMapOverlay
+  -- via C_Map.GetMapOverlays and then folds pfDB["zones"]["data"] over the top, where
+  -- shipped entries WIN. So the zeros clobbered whatever the client would have supplied,
+  -- and SearchZoneID bails on `zone > 0`, which left the zone silently unplaceable.
+  --
+  -- Fields are { parent, w%, h%, cx%, cy% } and cx/cy are the CENTRE of the subzone rect
+  -- on the parent map, not its corner -- pfQuest computes them as
+  -- (hitRectLeft + hitRectRight) / 2. Worth stating because the fit below yields corners.
+  --
+  -- Derived from the 90 NPCs both the pack and a server extract place in Alah'Thalas:
+  -- x_parent = 0.47627 x_sub + 37.7787, y_parent = 0.47487 y_sub + 2.0836, worst residual
+  -- 1.24. That spans 37.78..85.41 by 2.08..49.57 on Thalassian Highlands, so the width and
+  -- height are 47.63 and 47.49 and the centre is 61.59, 25.83. The fit was validated
+  -- against a control before use: it reproduces the flight master's stored position to
+  -- within 0.06.
+  --
+  -- Safe to delete if ClassicAPI ever reports an overlay for this zone -- removing the
+  -- explicit entry hands the job back to the live read.
+  pfDB["zones"]["data-turtle"][2040] = { 5225, 47.63, 47.49, 61.59, 25.83 }
+end
+
 -- Set last. A top-level error anywhere above stops this file, so if this
 -- flag is missing the overwrites did not all apply -- that failure mode
 -- cost 166 silently dropped corrections before 1.0.2. patchtable.lua

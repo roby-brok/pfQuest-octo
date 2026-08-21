@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.1.5** — Baron Rivendare's phantom Stormwind pin, found by reading every patch note the server has published. Previous: 1.1.4 — *Oink, Oink!* and the pigs, plus a correction to what 1.1.1 claimed. Previous: 1.1.3 — the relocated Alah'Thalas flight master. Previous: 1.1.2 — three quests OctoWoW never implemented, removed. Previous: 1.1.1 — three NPCs the world spawns that the pack had no record of, and the missing turn-in for *Shellcoins*. Previous: 1.1.0 — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.1.6** — Alah'Thalas gets a real zone transform instead of one that suppressed it. Previous: 1.1.5 — Baron Rivendare's phantom Stormwind pin, found by reading every patch note the server has published. Previous: 1.1.4 — *Oink, Oink!* and the pigs, plus a correction to what 1.1.1 claimed. Previous: 1.1.3 — the relocated Alah'Thalas flight master. Previous: 1.1.2 — three quests OctoWoW never implemented, removed. Previous: 1.1.1 — three NPCs the world spawns that the pack had no record of, and the missing turn-in for *Shellcoins*. Previous: 1.1.0 — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,31 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.1.6 — Alah'Thalas was suppressing itself
+
+The shipped zone table carried `[2040] = { 0, 0, 0, 0, 0 }` for Alah'Thalas, which looked like an
+empty slot waiting to be filled. It is worse than that. pfQuest builds its zone index live from the
+client's `WorldMapOverlay` through `C_Map.GetMapOverlays`, then folds `pfDB["zones"]["data"]` over
+the top — and **shipped entries win**. So the zeros were overriding whatever the client would have
+reported, and `SearchZoneID` bails on `zone > 0`, leaving the zone quietly unplaceable rather than
+merely unknown.
+
+Now `{ 5225, 47.63, 47.49, 61.59, 25.83 }`.
+
+**The values needed care.** The fields are `{ parent, w%, h%, cx%, cy% }`, and `cx`/`cy` are the
+**centre** of the subzone rect on the parent map, not its corner — pfQuest computes them as
+`(hitRectLeft + hitRectRight) / 2`. The fit that produced them yields corners, so writing the fitted
+offsets straight in would have placed the zone a half-width up and to the left.
+
+The transform itself comes from the 90 NPCs both this pack and a server extract place in
+Alah'Thalas: `x = 0.47627x + 37.7787`, `y = 0.47487y + 2.0836`, worst residual 1.24. That spans
+37.78–85.41 by 2.08–49.57 on Thalassian Highlands, giving the width, height and centre above. It was
+validated against a control before use — it reproduces the flight master's stored position to within
+0.06, which is the same fit that proved the extract stale in 1.1.3.
+
+The entry is safe to delete if ClassicAPI ever reports an overlay for this zone; removing it hands
+the job back to the live read.
 
 ### 1.1.5 — one phantom pin, from reading all twenty patch notes
 
