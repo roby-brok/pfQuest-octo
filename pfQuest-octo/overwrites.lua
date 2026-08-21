@@ -1789,6 +1789,34 @@ do -- quests: drop three the server never implemented (2026-08-21, player report
   end
 end
 
+do -- units: the Alah'Thalas flight master moved (2026-08-21 patch notes)
+  -- "The Alah'Thalas flight master has been relocated to the Citadel of the Sun landing
+  -- pad." Voryn Skystrider (93100) is the same NPC, confirmed by target name, so this is
+  -- a coordinate change rather than a new unit.
+  --
+  -- Measured in game rather than taken from the database extract, which does not have the
+  -- relocation: it still reports him at his old spot, and converting that stored position
+  -- reproduces the coordinates this pack already held to within 0.06. Anything that merely
+  -- MOVED in that patch is invisible to an id-set diff, so it has to be read in-game.
+  --
+  -- He is recorded twice, once per map. GetPlayerMapPosition on the Alah'Thalas map read
+  -- 27.65, 74.54, which is the 2040 space directly -- no conversion, no error. The 5225
+  -- value is that point projected onto Thalassian Highlands with a transform learned from
+  -- the 90 NPCs both sources place in Alah'Thalas: x = 0.47627x + 37.7787,
+  -- y = 0.47487y + 2.0836, worst residual 1.24 across those 90. It moves him -7.45 in x
+  -- and +6.68 in y from where the pack had him.
+  --
+  -- The flight meta list keys on the unit id alone and carries no coordinates, so it needs
+  -- no matching edit. Guarded because a future extract that renumbers or drops him would
+  -- otherwise nil-index here and kill every correction below.
+  if pfDB["units"]["data-turtle"][93100] then
+    pfDB["units"]["data-turtle"][93100]["coords"] = {
+      [1] = { 27.65, 74.54, 2040, 120 },
+      [2] = { 50.95, 37.48, 5225, 120 },
+    }
+  end
+end
+
 -- Set last. A top-level error anywhere above stops this file, so if this
 -- flag is missing the overwrites did not all apply -- that failure mode
 -- cost 166 silently dropped corrections before 1.0.2. patchtable.lua

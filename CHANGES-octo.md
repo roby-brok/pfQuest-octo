@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.1.2** — three quests OctoWoW never implemented, removed. Previous: 1.1.1 — three NPCs the world spawns that the pack had no record of, and the missing turn-in for *Shellcoins*. Previous: 1.1.0 — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.1.3** — the relocated Alah'Thalas flight master. Previous: 1.1.2 — three quests OctoWoW never implemented, removed. Previous: 1.1.1 — three NPCs the world spawns that the pack had no record of, and the missing turn-in for *Shellcoins*. Previous: 1.1.0 — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,31 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.1.3 — the Alah'Thalas flight master moved
+
+Today's patch notes: *"The Alah'Thalas flight master has been relocated to the Citadel of the Sun
+landing pad."* Voryn Skystrider (93100) is the same NPC — confirmed by target name — so this is a
+coordinate change, not a new unit. He is recorded once per map, and both were stale:
+
+| map | was | now |
+|---|---|---|
+| Alah'Thalas (2040) | 43.4, 60.4 | 27.65, 74.54 |
+| Thalassian Highlands (5225) | 58.4, 30.8 | 50.95, 37.48 |
+
+**Measured in game, because the database extract does not have the relocation.** It still reports
+him at his old spot, and converting that stored position reproduces the coordinates this pack
+already held to within 0.06 — which is what proved the extract stale rather than the pack wrong.
+
+The reading came from `GetPlayerMapPosition` on the Alah'Thalas map, which is the 2040 space
+directly, so that row needed no conversion. The 5225 row is that point projected with a transform
+learned from the 90 NPCs both sources place in Alah'Thalas — `x = 0.47627x + 37.7787`,
+`y = 0.47487y + 2.0836`, worst residual 1.24 — because the pack's own transform for zone 2040 is a
+null `{ 0, 0, 0, 0, 0 }` and cannot do the projection itself.
+
+Worth recording the general lesson: an id-set diff against a server extract finds things **added
+and removed**, and is completely blind to things that **moved**. Relocations have to come from the
+patch notes and be read in-game.
 
 ### 1.1.2 — three quests the server never implemented
 
