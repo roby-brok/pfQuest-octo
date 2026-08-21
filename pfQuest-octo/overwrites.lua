@@ -1817,6 +1817,73 @@ do -- units: the Alah'Thalas flight master moved (2026-08-21 patch notes)
   end
 end
 
+do -- quests/units: "Oink, Oink!" and the pigs (2026-08-21, second extract pass)
+  -- The first pass at this extract was run before its NPC and quest scans had finished,
+  -- and the relation tables were short by 562 questgivers and 607 enders. On that data
+  -- none of the quests the server has and this pack lacks appeared obtainable. With the
+  -- scans complete, three of them are -- and two of their questgivers were dismissed as
+  -- scenery in the same pass. Recorded here as the correction.
+  --
+  -- "Oink, Oink!" is an ordinary level 1 Elwynn quest: the Pig both starts and ends it,
+  -- and Raw Black Truffle (4608) is already in this pack and already drops from creatures
+  -- it already knows, so the objective resolves with nothing else added.
+  pfDB["quests"]["data-turtle"][700001] = {
+    ["lvl"] = 1,
+    ["min"] = 1,
+    ["obj"] = {
+      ["I"] = { 4608 },
+    },
+    ["start"] = {
+      ["U"] = { 900200 },
+    },
+    ["end"] = {
+      ["U"] = { 900200 },
+    },
+  }
+  pfDB["quests"]["enUS-turtle"][700001] = {
+    ["T"] = "Oink, Oink!",
+    ["O"] = "Bring 1 Raw Black Truffle to the Pig in Elwynn Forest.",
+    ["D"] = "Oink! Oink oink!$B$B<The pig snuffles at your feet, then noses hopefully toward your pack.>",
+  }
+
+  pfDB["units"]["data-turtle"][900200] = {
+    ["coords"] = {
+      [1] = { 23.72, 58.39, 12, 300 },
+      [2] = { 34.18, 52.1, 85, 300 },
+    },
+    ["fac"] = "AH",
+    ["lvl"] = "1",
+  }
+  pfDB["units"]["enUS-turtle"][900200] = "Pig"
+
+  -- Ozzy stands in all eight starting zones, one entry id per zone. Recorded as plain
+  -- units so lookups answer, but his two quests -- 42201 "Reclaiming Ozzy" and 42202
+  -- "Reclaiming Buccaneer Bubbles" -- are deliberately left unwired: both are level 0 in
+  -- zone 0 with no objective text and the same NPC at each end, which reads as a pet
+  -- reclaim service rather than content. Only the Dun Morogh Ozzy carries the relations
+  -- at all, which is itself a sign the data is describing something other than a quest.
+  local ozzy = {
+    [2510002] = { 30.8, 81.65, 1 },
+    [2510003] = { 50.72, 27.28, 12 },
+    [2510004] = { 57.89, 27.18, 141 },
+    [2510005] = { 38.81, 79.38, 5225 },
+    [2510006] = { 42.68, 52.12, 14 },
+    [2510007] = { 23.27, 58.47, 85 },
+    [2510008] = { 31.67, 88.95, 5536 },
+    [2510009] = { 58.47, 77.49, 215 },
+  }
+  for id, c in pairs(ozzy) do
+    pfDB["units"]["data-turtle"][id] = {
+      ["coords"] = {
+        [1] = { c[1], c[2], c[3], 300 },
+      },
+      ["fac"] = "AH",
+      ["lvl"] = "1",
+    }
+    pfDB["units"]["enUS-turtle"][id] = "Ozzy"
+  end
+end
+
 -- Set last. A top-level error anywhere above stops this file, so if this
 -- flag is missing the overwrites did not all apply -- that failure mode
 -- cost 166 silently dropped corrections before 1.0.2. patchtable.lua
