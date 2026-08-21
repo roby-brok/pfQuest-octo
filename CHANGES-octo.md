@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.1.0** — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.1.1** — three NPCs the world spawns that the pack had no record of, and the missing turn-in for *Shellcoins*. Previous: 1.1.0 — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,33 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.1.1 — three spawned NPCs, and somewhere to hand in *Shellcoins*
+
+Checked against a fresh server extract rather than the database site: of 10,856 creatures with
+real spawns, only **72** were absent from this pack, and of those only three carry anything a
+player would look up. The other 69 are mount displays, script triggers, waypoints, and ambient
+NPCs pfQuest has no business drawing. Quest coverage came out clean — 8 quests exist server-side
+without an entry here, and not one of them has both a questgiver and a turn-in, so none is
+obtainable.
+
+**Elodia is the real fix.** *Shellcoins* (80381) was already in the pack with its collect item,
+but with no `["end"]`. Its objective reads "return to Elodia" while the map showed nowhere to
+return to. She is now recorded, and the quest points at her.
+
+**The Mysterious Stranger is recorded but not wired.** He stands in all eight starting zones, so
+he is here as a plain unit and "where is this NPC" now answers. His only quest is 80388,
+*[DEPRECATED] Stay Awhile and Listen...*, the retired Immortal-mode offer — attaching it would
+walk people to a dead quest, so it is deliberately left off.
+
+**Innkeeper Warmbreeze is recorded but is not an innkeeper.** He carries the subname, but
+`npc_flags 0` where 73 of this server's 80 innkeepers carry 135. He is added as an ordinary unit
+and deliberately kept out of the innkeeper tracking list, which is a promise that you can bind
+where it sends you.
+
+Zone ids were learned by voting rather than read from the extract, whose `zone_id` column is 0 on
+51,992 of its 53,732 spawn rows. Every NPC both sources place in exactly one zone votes; the only
+runners-up were the city-inside-a-zone cases, which is the mapping working rather than noise.
 
 ### 1.1.0 — the pack stops loading five languages you do not read
 

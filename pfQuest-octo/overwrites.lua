@@ -1695,6 +1695,77 @@ do -- quests
   pfDB["items"]["data-turtle"][41783]["U"] = { [62217] = 1.0 }
 end
 
+do -- units: three spawned NPCs the pack had no record of (2026-08-21, InkLab DB refresh)
+  -- Found by diffing the pack against a fresh server extract. Of 10,856 creatures with
+  -- real spawns, only 72 were absent here, and only these three carry anything a player
+  -- would ever look up; the rest are mount displays, script triggers, waypoints and
+  -- ambient NPCs pfQuest has no business drawing.
+  --
+  -- Zone ids were learned by voting, not read off the extract, whose zone_id column is 0
+  -- on 51,992 of its 53,732 spawn rows. Every NPC both sources place in exactly one zone
+  -- votes: Tanaris 440 (117/125), Dun Morogh 1 (159/174), Durotar 14 (234/236), Elwynn 12
+  -- (169/172), Mulgore 215 (116/116), Teldrassil 141 (138/138), Tirisfal 85 (236/246), and
+  -- Blackstone Island 5536, Thalassian Highlands 5225, Moonwhisper Coast 5642 unanimously.
+  -- Every runner-up is a city-inside-a-zone case -- Ironforge under Dun Morogh, Orgrimmar
+  -- under Durotar, Stormwind under Elwynn -- which is the mapping working, not noise.
+  --
+  -- ["fac"] follows the server faction: 35 -> "AH" (1432 of 1446 units in this pack agree),
+  -- 104 -> "H" (124 of 138).
+
+  -- Elodia is the turn-in for "Shellcoins" (80381). The quest was already here with its
+  -- collect item but carried no ["end"], so its objective read "return to Elodia" while
+  -- the map showed nowhere to return to. She stands at the same Tanaris camp as 80990,
+  -- which ends the neighbouring quest.
+  pfDB["units"]["data-turtle"][80999] = {
+    ["coords"] = {
+      [1] = { 67.6, 26.82, 440, 300 },
+    },
+    ["fac"] = "AH",
+    ["lvl"] = "51",
+  }
+  pfDB["units"]["enUS-turtle"][80999] = "Elodia"
+
+  -- Guarded rather than assigned straight: a future extract that drops 80381 would turn a
+  -- bare index into a nil error, and a top-level error here stops every correction below
+  -- it -- the failure the closing comment of this file was written about.
+  if pfDB["quests"]["data-turtle"][80381] then
+    pfDB["quests"]["data-turtle"][80381]["end"] = { ["U"] = { 80999 } }
+  end
+
+  -- The Mysterious Stranger stands in all eight starting zones. Recorded as a plain unit so
+  -- "where is this NPC" answers, but deliberately NOT wired as a questgiver: his only quest
+  -- is 80388, "[DEPRECATED] Stay Awhile and Listen...", the retired Immortal-mode offer.
+  -- Pinning it would walk players to a dead quest.
+  pfDB["units"]["data-turtle"][81030] = {
+    ["coords"] = {
+      [1] = { 30.06, 72.29, 1, 300 },
+      [2] = { 49.94, 41.53, 12, 300 },
+      [3] = { 44.2, 68.04, 14, 300 },
+      [4] = { 32.44, 65.12, 85, 300 },
+      [5] = { 59.8, 41.11, 141, 300 },
+      [6] = { 45.35, 76.23, 215, 300 },
+      [7] = { 49.59, 85.01, 5225, 300 },
+      [8] = { 35.29, 63.31, 5536, 300 },
+    },
+    ["fac"] = "AH",
+    ["lvl"] = "60",
+  }
+  pfDB["units"]["enUS-turtle"][81030] = "Mysterious Stranger"
+
+  -- Innkeeper Warmbreeze carries the "Innkeeper" subname but npc_flags 0, where 73 of this
+  -- server's 80 innkeepers carry 135. Added as an ordinary unit and deliberately kept OUT
+  -- of pfDB["meta-turtle"]["innkeeper"]: that list is a promise you can bind there, and he
+  -- has no services to bind with.
+  pfDB["units"]["data-turtle"][62975] = {
+    ["coords"] = {
+      [1] = { 66.85, 36.23, 5642, 300 },
+    },
+    ["fac"] = "H",
+    ["lvl"] = "53",
+  }
+  pfDB["units"]["enUS-turtle"][62975] = "Innkeeper Warmbreeze"
+end
+
 -- Set last. A top-level error anywhere above stops this file, so if this
 -- flag is missing the overwrites did not all apply -- that failure mode
 -- cost 166 silently dropped corrections before 1.0.2. patchtable.lua
