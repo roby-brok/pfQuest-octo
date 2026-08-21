@@ -53,16 +53,20 @@ The pack's own code changes and fixes are listed in **[CHANGES-octo.md](CHANGES-
 **Requires [pfQuest](https://github.com/The-Kludge-Bureau/pfQuest).** This is a database pack, not
 a standalone addon.
 
-1. **[Download](https://github.com/roby-brok/pfQuest-octo/archive/refs/heads/master.zip)**
-2. Unpack the zip and open the `pfQuest-octo-master` folder inside it
+1. **[Download the latest release](https://github.com/roby-brok/pfQuest-octo/releases/latest)** —
+   take *Source code (zip)* at the bottom of the release page
+2. Unpack it and open the `pfQuest-octo-<version>` folder inside
 3. Copy **`pfQuest-octo`** into `Wow-Directory\Interface\AddOns`
 4. *Non-English clients only:* also copy the one folder matching your language —
    `pfQuest-octo-deDE`, `-esES`, `-ptBR`, `-ruRU` or `-zhCN`
 5. Restart WoW
 
-No renaming any more. Since 1.1.0 the download contains the addon folders already correctly
-named, so the old trap — a folder called `pfQuest-octo-master` holding `pfQuest-octo.toc`, which
-WoW skips in silence with no error and no entry in the addon list — cannot happen.
+**Copy the folders from inside the wrapper, not the wrapper itself.** The zip unpacks to a
+folder carrying the version or branch on the end — `pfQuest-octo-1.1.0`, or
+`pfQuest-octo-master` if you grabbed it straight off the branch. Copying *that* into `AddOns`
+is the one thing that goes wrong: WoW skips a folder whose name does not match the `.toc`
+inside it, in silence, with no error and no entry in the addon list. The folders one level
+down are already named correctly, so there is nothing to rename.
 
 **English clients need only `pfQuest-octo`.** The language folders are load-on-demand: the pack
 pulls in the single one matching your client and never touches the others, so copying all of them
