@@ -1766,6 +1766,29 @@ do -- units: three spawned NPCs the pack had no record of (2026-08-21, InkLab DB
   pfDB["units"]["enUS-turtle"][62975] = "Innkeeper Warmbreeze"
 end
 
+do -- quests: drop three the server never implemented (2026-08-21, player report)
+  -- A quest row existing on OctoWoW does not mean it is live. Unimplemented ones keep
+  -- the placeholder title "- Quests" with QuestLevel 0, MinLevel 0 and no objectives,
+  -- while this pack shows them under their real TurtleWoW names -- so a player walks to
+  -- a questgiver who offers nothing, which is exactly the report that surfaced these.
+  -- 40795 was reported by Sandrea, who had already suppressed it in Questie-Octo for the
+  -- same reason. The other two share the identical signature and would have produced the
+  -- same report later, so they go now rather than one at a time.
+  --
+  --   40795  "In Search of Solar Knowledge"  Magistrix Ishalah, Alah'Thalas, priest-only
+  --   55100  "Join The League!"              Junder Brokk, Wetlands
+  --   55101  "Help The League?"              Merrin Rockweaver, Wetlands
+  --
+  -- Checked for dangling references first: the only pointer at any of them was 55101's
+  -- own ["pre"] = { 55100 }, and both halves of that chain leave together, so nothing
+  -- surviving indexes a removed record. Names are cleared alongside the data, otherwise
+  -- the database browser would still find them by title and then open on nothing.
+  for _, qid in pairs({ 40795, 55100, 55101 }) do
+    pfDB["quests"]["data-turtle"][qid] = nil
+    pfDB["quests"]["enUS-turtle"][qid] = nil
+  end
+end
+
 -- Set last. A top-level error anywhere above stops this file, so if this
 -- flag is missing the overwrites did not all apply -- that failure mode
 -- cost 166 silently dropped corrections before 1.0.2. patchtable.lua

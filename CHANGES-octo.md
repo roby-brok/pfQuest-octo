@@ -1,6 +1,6 @@
 # Changes in this pack
 
-**This build: 1.1.1** — three NPCs the world spawns that the pack had no record of, and the missing turn-in for *Shellcoins*. Previous: 1.1.0 — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
+**This build: 1.1.2** — three quests OctoWoW never implemented, removed. Previous: 1.1.1 — three NPCs the world spawns that the pack had no record of, and the missing turn-in for *Shellcoins*. Previous: 1.1.0 — the locale split: each language is now a separate load-on-demand addon, so a login parses only your own. Previous: 1.0.13 — *Poisoned Water* (6804) gains a unit objective: the Blighted Surges the Aspect of Neptulon is used on, because the actual bracer-dropper only exists mid-transformation and has spawns in no database. Previous: 1.0.12 — the 38 approved replacements: quests the server reworked after extraction now carry the server's current objectives (the pack's only non-additive change, applied on explicit approval). Previous: 1.0.11 — batch 2 of the server comparison: 35 race/class restrictions removed that the server does not have (the pack was hiding those quests from eligible players), 9 objective items appended (Valthalak chain among them). Previous: 1.0.10 — the collect batch: 197 collect quests gain item objectives (166 draw pins immediately), 20 recovered collectables. Previous: 1.0.9, the first server-authoritative batch from the full crawl of the server's own database site: 12 restored objectives and 12 restored class/race requirements, including the fix for class-restricted quests showing to the wrong class. Previous: 1.0.8 (56 quests from the name-match audit), 1.0.7 (nine Moonwhisper quests), 1.0.6 (first two), 1.0.5 (fake mount sources stripped), 1.0.4 (per-field merge fix). Safe to version this pack freely;
 unlike pfQuest itself it broadcasts nothing, so a bump cannot tell other players in your
 raid that an update exists.
 
@@ -9,6 +9,28 @@ The data itself is unmodified — see [Credits](README.md#credits). This file co
 pack's own code (`patchtable.lua`, `overwrites.lua`) and what is shipped.
 
 ## Bugs fixed
+
+### 1.1.2 — three quests the server never implemented
+
+A quest row existing on OctoWoW does not mean the quest is live. Unimplemented ones keep the
+placeholder title `- Quests` with `QuestLevel 0`, `MinLevel 0` and no objectives, while this pack
+showed them under their real TurtleWoW names — so the map sent players to a questgiver who offers
+nothing. Removed:
+
+| id | shown as | giver | zone |
+|---|---|---|---|
+| 40795 | In Search of Solar Knowledge | Magistrix Ishalah | Alah'Thalas, priest-only |
+| 55100 | Join The League! | Junder Brokk | Wetlands |
+| 55101 | Help The League? | Merrin Rockweaver | Wetlands |
+
+40795 was reported by Sandrea, who had already suppressed it in Questie-Octo for the same reason.
+The other two share the identical signature and would have produced the same report later, so they
+went at the same time. These three are the *complete* set: every quest this pack names that the
+server carries as a placeholder was checked, and there are no others.
+
+References were checked before removal — the only pointer at any of them was 55101's own
+`["pre"] = { 55100 }`, and both halves of that chain leave together. Titles are cleared alongside
+the data so the database browser cannot surface them either.
 
 ### 1.1.1 — three spawned NPCs, and somewhere to hand in *Shellcoins*
 
